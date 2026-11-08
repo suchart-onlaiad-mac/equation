@@ -389,6 +389,16 @@
   .stuck{margin-top:10px}
   footer a{color:#7a5cff}
   @media (max-width:600px){ .eqmap{grid-template-columns:1fr} }
+  /* ---- (EQ) บท 2 แบ่งของ: เศษส่วนซ้อน · แปลง A/B · สะพานไปแอปอื่น ---- */
+  .frc{display:inline-flex; flex-direction:column; align-items:center; vertical-align:middle; line-height:1.15; font-weight:800; margin:0 3px}
+  .frc>span:first-child{border-bottom:2px solid currentColor; padding:0 4px}
+  .frc.big{font-size:26px; color:var(--purple)}
+  .frout{text-align:center; font-size:17px; margin-top:8px; line-height:1.8}
+  .frab{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:8px; text-align:center}
+  .frab svg{display:block; width:100%; max-width:170px; margin:6px auto; background:#fff; border-radius:6px}
+  .frab span{font-size:15px; color:#6a64a6}
+  .bridge{display:block; margin-top:12px; background:#eef7ff; border:2px dashed #7fb6ff; border-radius:14px; padding:10px 14px; font-size:14.5px; line-height:1.55; color:#2b5fa8; text-decoration:none}
+  .bridge:hover{background:#e2f0ff}
 </style>
 </head>
 <body>
@@ -407,7 +417,7 @@
     <div class="menu">
       <button class="card c1" onclick="go('c0')"><span class="ico">🚪</span>ลองเดาก่อน<small>โจทย์ซื้อของ ลองคิดดู</small></button>
       <button class="card c2" onclick="go('bal')"><span class="ico">⚖️</span>ตาชั่ง<small>หัวใจของสมการ</small></button>
-      <button class="card c3 locked" disabled><span class="tag">เร็ว ๆ นี้</span><span class="ico">🍕</span>แบ่งของ<small>เศษส่วน · ร้อยละ</small></button>
+      <button class="card c3" onclick="go('fr')"><span class="ico">🍕</span>แบ่งของ<small>เศษส่วน · ร้อยละ</small></button>
       <button class="card c4 locked" disabled><span class="tag">เร็ว ๆ นี้</span><span class="ico">📦</span>กล่องปิด<small>ตัวแปร = ของที่ยังไม่รู้</small></button>
       <button class="card c5 locked" disabled><span class="tag">เร็ว ๆ นี้</span><span class="ico">🔓</span>แก้สมการ<small>ทีละบรรทัด มีเหตุผล</small></button>
       <button class="card c6 locked" disabled><span class="tag">เร็ว ๆ นี้</span><span class="ico">💰</span>ดอกเบี้ย<small>เงินฝาก · เงินกู้ นับวัน</small></button>
@@ -484,6 +494,7 @@
         <div class="lines" id="gsOut"></div>
         <div class="tw"><table class="t" id="gsTab"><tr><th>เดาว่าถาดละ</th><th>3 × ▢ + 10</th><th>เทียบกับ 100</th></tr></table></div>
         <div class="memo">🧠 <b>นี่คือเหตุผลแบบ "ถ้า… แล้ว…"</b> · ถ้าเดา 20 แล้วได้ 70 ซึ่งน้อยไป → ราคาจริงต้อง<b>มากกว่า</b> 20 · ข้อสรุปแต่ละข้อมาจากข้อก่อนหน้าเสมอ</div>
+        <a class="bridge" href="../it/#ofx" target="_blank" rel="noopener">💻 เลื่อนเปลี่ยนค่า ▢ แล้วผลเปลี่ยนตาม · <b>Excel</b> ก็ทำแบบนี้: ช่องที่สูตรอ้างถึงคือกล่องใส่ตัวเลข เปลี่ยนเลขในช่อง ผลของสูตรเปลี่ยนเอง · ดูในแอป <b>ไอทีง่ายนิดเดียว</b> บท Excel ↗</a>
         <div class="memo ex">⚠️ <b>เดาได้ แต่เหนื่อยเมื่อเลขใหญ่</b> · ถ้าโจทย์เป็น "ซื้อ 37 ถาด ให้แบงก์ 2,000 ทอน 150 บาท" ต้องเดาหลายรอบ · บทถัดไปเราจะได้<b>วิธีที่ไม่ต้องเดาเลย</b> ด้วยของธรรมดาอย่าง <b>ตาชั่ง</b> ⚖️</div>
         <div class="center" style="margin-top:16px"><button class="btn go" onclick="openGame('c0')">🎮 ไปพิชิตด่านเลย!</button></div>
       </div>
@@ -549,6 +560,89 @@
     </div>
   </div>
 
+  <!-- ================= CH 2 · แบ่งของ ================= -->
+  <div class="screen" id="fr">
+    <button class="backbtn" onclick="home()">⬅️ กลับหน้าหลัก</button>
+    <div class="panel">
+      <h2>🍕 แบ่งของ</h2>
+
+      <div class="layer L1">
+        <h3>🌱 ชั้นเมล็ด · รู้แค่นี้ก็เข้าใจ</h3>
+        <p>บท ⚖️ ตาชั่ง ใช้แต่ของเต็มก้อน: ลูกตุ้ม 1 ลูก 2 ลูก · แต่ชีวิตจริงมีของที่ต้อง<b>แบ่ง</b> 🥮</p>
+
+        <div class="step-h" id="fr-s1"><span class="sn">1</span> 🥮 ไม่ถึง 1 ชิ้น เลขนับบอกไม่ได้</div>
+        <p class="tip">มี<b>ขนมเปี๊ยะ 1 ชิ้น</b> · กดเลือกจำนวนคน แล้วดูว่าแต่ละคนได้เท่าไร</p>
+        <div class="tabs">
+          <button class="tab on" onclick="pie1(2,this)">👥 2 คน</button>
+          <button class="tab" onclick="pie1(3,this)">👥 3 คน</button>
+          <button class="tab" onclick="pie1(4,this)">👥 4 คน</button>
+        </div>
+        <div class="fig"><svg class="bsvg" id="pie1" viewBox="0 0 360 200"></svg></div>
+        <div class="info" id="pie1fb"></div>
+        <div class="memo">🔢 เลขนับ 1, 2, 3 บอกได้แค่ "<b>กี่ชิ้นเต็ม</b>" · แต่ละคนได้<b>ไม่ถึง 1 ชิ้น</b> เลขนับจึงตอบไม่ได้ · คนจึงคิดวิธีเขียนแบบใหม่ เรียกว่า <b>เศษส่วน</b></div>
+        <div class="hist">📜 <b>ที่มา</b> · ตำราคณิตศาสตร์ของ<b>อียิปต์โบราณ</b> อายุราว 3,500 ปี มีโจทย์<b>แบ่งขนมปังให้คนงาน</b> · ของที่แบ่งแล้วไม่ครบชิ้น คนสมัยนั้นก็เขียนเป็นส่วน ๆ แล้ว</div>
+
+        <div class="step-h" id="fr-s2"><span class="sn">2</span> ✏️ เขียนเศษส่วน</div>
+        <div class="memo">✍️ <b>วิธีเขียน</b> แบ่งแปลงเป็น 5 ช่อง<b>เท่า ๆ กัน</b> ปลูกพริก 3 ช่อง เขียนว่า <span class="frc"><span>3</span><span>5</span></span> อ่านว่า "สามส่วนห้า"<br>
+        · <b>ตัวล่าง</b> (ตัวส่วน) = แบ่งทั้งหมดเป็นกี่ส่วนเท่า ๆ กัน<br>
+        · <b>ตัวบน</b> (ตัวเศษ) = เอามากี่ส่วน<br>
+        · เขียนในบรรทัดเดียวว่า <b>3/5</b> ก็ได้ ความหมายเหมือนกัน</div>
+        <p class="tip" style="margin-top:10px">👆 แตะช่องเพื่อปลูกพริก 🌶️ (แตะซ้ำ = ถอน) แล้วดูเศษส่วนเปลี่ยนตาม</p>
+        <div class="fig"><svg class="bsvg" id="plot5" viewBox="0 0 360 120"></svg></div>
+        <div class="frout" id="plot5fb"></div>
+        <div class="memo ex">⚠️ ต้อง<b>แบ่งเท่า ๆ กัน</b>เท่านั้น · ตัดเค้ก 4 ชิ้น ใหญ่บ้างเล็กบ้าง กินไป 1 ชิ้น <b>ไม่ใช่</b> 1/4 ของเค้ก</div>
+
+        <div class="step-h" id="fr-s3"><span class="sn">3</span> 🤔 ช่องของสองแปลงขนาดไม่เท่ากัน เทียบยาก → แบ่งเป็น 100</div>
+        <p class="tip">แปลง <b>A</b> กับแปลง <b>B</b> ขนาดเท่ากัน · A แบ่ง 5 ช่อง ปลูกพริก 3 ช่อง (<b>3/5</b>) · B แบ่ง 10 ช่อง ปลูก 7 ช่อง (<b>7/10</b>)<br>แปลงไหนปลูกพริกมากกว่า? ช่องของสองแปลง<b>ใหญ่ไม่เท่ากัน</b> นับช่องเทียบกันตรง ๆ ไม่ได้</p>
+        <div class="frab">
+          <div><b>A · 3/5</b><svg id="gA" viewBox="0 0 100 100"></svg><span id="gAn"></span></div>
+          <div><b>B · 7/10</b><svg id="gB" viewBox="0 0 100 100"></svg><span id="gBn"></span></div>
+        </div>
+        <div class="center" style="margin-top:8px"><button class="btn alt" id="cut100b" onclick="cut100()">✂️ ซอยทั้งสองแปลงเป็น 100 ช่องเล็กเท่ากัน</button></div>
+        <div class="info" id="cut100fb"></div>
+        <div class="memo">💯 <b>ส่วนใน 100</b> มีชื่อเรียกว่า <b>ร้อยละ</b> หรือ <b>เปอร์เซ็นต์</b> · เขียนด้วยเครื่องหมาย <b>%</b><br>60 ส่วนใน 100 = <b>ร้อยละ 60</b> = <b>60%</b> · ทุกอย่างแบ่งเป็น 100 เท่ากัน จึงเทียบกันได้ทันที</div>
+        <div class="hist">📜 <b>ที่มา</b> · ชาวโรมันโบราณเก็บ<b>ภาษีของที่ขายทอดตลาด 1 ส่วนใน 100</b> · ต่อมาพ่อค้าชาวอิตาลีเขียนคำว่า <b>per cento</b> (ต่อร้อย) ย่อลงเรื่อย ๆ จนกลายเป็นเครื่องหมาย <b>%</b></div>
+        <a class="bridge" href="../percent/#s1" target="_blank" rel="noopener">🔗 อยากระบายตาราง 100 ช่องเอง · ไปแอป <b>สนุกกับเปอร์เซ็นต์</b> บท "เปอร์เซ็นต์คืออะไร" ↗</a>
+        <button class="more" onclick="openLayer('frL2',this)">🌿 อยากรู้อีกนิด · ทำเศษส่วนให้เป็นร้อยละ ⬇️</button>
+      </div>
+
+      <div class="layer L2 hide" id="frL2">
+        <h3>🌿 ชั้นต้นกล้า · ซอยช่องให้เป็น 100</h3>
+        <p class="tip">เลือกเศษส่วน แล้วกด <b>✂️ ซอยละเอียดขึ้น</b> · ทุกช่องถูกซอยเป็นชิ้นเล็กเท่ากัน · <b>พริกที่ปลูกไว้ไม่ได้เพิ่มหรือลด</b> แค่นับเป็นชิ้นเล็กลง</p>
+        <div class="tabs">
+          <button class="tab on" onclick="cutPick(0,this)">1/2</button>
+          <button class="tab" onclick="cutPick(1,this)">3/5</button>
+          <button class="tab" onclick="cutPick(2,this)">1/4</button>
+          <button class="tab" onclick="cutPick(3,this)">7/20</button>
+        </div>
+        <div class="fig"><svg class="bsvg" id="cutBar" viewBox="0 0 360 70"></svg></div>
+        <div class="ops"><button class="tab" onclick="cutK(-1)">➖ ซอยน้อยลง</button><button class="tab on" onclick="cutK(1)">✂️ ซอยละเอียดขึ้น</button></div>
+        <div class="lines" id="cutOut"></div>
+        <div class="memo">🔑 <b>ซอยทุกช่องเป็น ▢ ชิ้น</b> → ตัวล่างคูณ ▢ <b>และ</b>ตัวบนก็คูณ ▢ ด้วย (ช่องที่ปลูกก็ถูกซอยเหมือนกัน) · ปริมาณจริงเท่าเดิม<br>อยากให้ตัวล่างเป็น 100: <b>ตัวล่าง × ▢ = 100</b> → คิดย้อนแบบบท 🚪: <b>▢ = 100 ÷ ตัวล่าง</b></div>
+        <div class="memo ex">🤔 บางเศษส่วนซอยให้ตัวล่างเป็น 100 พอดีไม่ได้ เช่น <b>1/3</b> (100 ÷ 3 ไม่ลงตัว) · ต้องใช้<b>ทศนิยม</b> (เลขที่มีจุด เช่น 0.5) ช่วย</div>
+        <a class="bridge" href="../percent/#s2" target="_blank" rel="noopener">🔗 ดูว่า % เศษส่วน และทศนิยม คือของสิ่งเดียวกัน · แอป <b>สนุกกับเปอร์เซ็นต์</b> บท "% เศษส่วน ทศนิยม" ↗</a>
+        <button class="more" onclick="openLayer('frL3',this)">🌳 เจาะลึก · โจทย์ร้อยละ เขียนเป็นกล่อง ▢ ⬇️</button>
+      </div>
+
+      <div class="layer L3 hide" id="frL3">
+        <h3>🌳 ชั้นต้นไม้ใหญ่ · โจทย์ร้อยละ 3 แบบ</h3>
+        <p class="tip">โจทย์ร้อยละมี 3 แบบ · ต่างกันตรงที่<b>ไม่รู้ตัวไหน</b> · ใช้ของที่เรียนมาแล้วทั้งหมด: ซอยช่อง (🌿) · คิดย้อน (🚪) · กล่อง ▢</p>
+        <div class="tabs" id="pct3t">
+          <button class="tab on" onclick="pct3(0,this)">① หาส่วน</button>
+          <button class="tab" onclick="pct3(1,this)">② หาร้อยละ</button>
+          <button class="tab" onclick="pct3(2,this)">③ หาทั้งหมด</button>
+        </div>
+        <div class="step-h" id="fr-p"><span class="sn" id="pct3n">①</span> <span id="pct3h"></span></div>
+        <div class="story" id="pct3s"></div>
+        <div class="lines" id="pct3l"></div>
+        <div class="center" style="margin-top:8px"><button class="btn alt" id="pct3b" onclick="pct3next()">👉 ดูขั้นต่อไป</button></div>
+        <div id="pct3x"></div>
+        <div class="memo">🧭 ทั้ง 3 แบบ เริ่มจากคำเดียวกัน: <b>ร้อยละ = ส่วนใน 100</b> · แล้วถามตัวเองว่า "<b>ไม่รู้ตัวไหน</b>" ให้ตัวนั้นเป็น ▢</div>
+        <div class="center" style="margin-top:16px"><button class="btn go" onclick="openGame('fr')">🎮 ไปพิชิตด่านเลย!</button></div>
+      </div>
+    </div>
+  </div>
+
   <!-- ================= GAME ================= -->
   <div class="screen" id="game">
     <button class="backbtn" onclick="home()">⬅️ กลับหน้าหลัก</button>
@@ -585,7 +679,7 @@
 
   <footer>
     ⚖️ สื่อการเรียนรู้ "สมการง่ายนิดเดียว" · เปิดได้ทุกอุปกรณ์<br>
-    เปิดแล้ว 2 บท · เรื่องร้อยละ ไปเรียนต่อที่ <a href="https://suchart-onlaiad-mac.github.io/percent/" target="_blank" rel="noopener">สนุกกับเปอร์เซ็นต์</a> · ความคืบหน้าบันทึกไว้ในเครื่องที่เล่น 💛
+    เปิดแล้ว 3 บท ·เรื่องร้อยละ ไปเรียนต่อที่ <a href="https://suchart-onlaiad-mac.github.io/percent/" target="_blank" rel="noopener">สนุกกับเปอร์เซ็นต์</a> · ความคืบหน้าบันทึกไว้ในเครื่องที่เล่น 💛
   </footer>
 </div>
 
@@ -731,6 +825,40 @@ const BANK = {
     {p:'⚖️', s:'balL3', q:'2▢ + 5 = ▢ + 9 ▢ เท่ากับเท่าไร', c:['4','14','2','5'], w:'เอาถุงออก 1 ใบ: ▢ + 5 = 9 → ▢ = 4 · ตรวจ: 13 = 13'},
     {p:'⚖️', s:'balL3', q:'สมการที่ถูกอยู่แล้ว ทำข้อไหนแล้วสองข้างยังเท่ากัน', c:['เอาถุงออก 1 ใบทั้งสองข้าง','บวก 3 เฉพาะข้างซ้าย','ลบ 1 เฉพาะข้างขวา','เอาถุงออกข้างเดียว'], w:'ทำเหมือนกันทั้งสองข้าง จึงยังเท่ากัน · ทำข้างเดียว คานเอียง'},
     {p:'⚖️', s:'balL3', q:'5▢ = 2▢ + 12 ▢ เท่ากับเท่าไร', c:['4','12','6','3'], w:'เอาถุงออก 2 ใบทั้งสองข้าง: 3▢ = 12 → ▢ = 4 · ตรวจ: 20 = 20'}
+  ],
+  // บท 2 · pc = บทในแอป percent ที่ฝึกพื้นเรื่องนี้ (ตอบผิด → ลิงก์ไปฝึกเพิ่ม · ไม่เขียนบทร้อยละซ้ำ)
+  fr1:[
+    {p:'🥮', s:'fr-s1', q:'ขนมเปี๊ยะ 1 ชิ้น แบ่ง 2 คนเท่า ๆ กัน ทำไมตอบด้วยเลขนับ 1, 2, 3 ไม่ได้', c:['แต่ละคนได้ไม่ถึง 1 ชิ้นเต็ม','เพราะขนมแบ่งไม่ได้','เพราะ 2 คนมากเกินไป','ตอบได้ คนละ 1 ชิ้น'], w:'แต่ละคนได้ครึ่งชิ้น ไม่ถึง 1 ชิ้นเต็ม · เลขนับบอกได้แค่ของเต็มชิ้น จึงต้องมีเศษส่วน'},
+    {p:'✏️', s:'fr-s2', q:'ตัดขนมเป็น 4 ชิ้นเท่า ๆ กัน กินไป 1 ชิ้น เขียนเป็นเศษส่วนว่าอะไร', c:['1/4','4/1','1/3','3/4'], w:'เอามา 1 ส่วน (ตัวบน) จากทั้งหมด 4 ส่วนเท่ากัน (ตัวล่าง)'},
+    {p:'🔢', s:'fr-s2', q:'ใน 3/5 เลข 5 (ตัวล่าง) บอกอะไร', c:['แบ่งทั้งหมดเป็น 5 ส่วนเท่า ๆ กัน','เอามา 5 ส่วน','เหลืออยู่ 5 ส่วน','ต้องคูณด้วย 5'], w:'ตัวล่าง (ตัวส่วน) = แบ่งทั้งหมดกี่ส่วน · ตัวบน (ตัวเศษ) = เอามากี่ส่วน'},
+    {p:'🌶️', s:'fr-s2', q:'แปลงผักแบ่ง 5 ช่องเท่ากัน ปลูกพริก 3 ช่อง พริกเป็นเศษส่วนเท่าไรของแปลง', c:['3/5','5/3','3/8','2/5'], w:'ปลูก 3 ช่อง จากทั้งหมด 5 ช่อง = 3/5'},
+    {p:'🟫', s:'fr-s2', q:'แปลงเดิม (5 ช่อง ปลูกพริก 3 ช่อง) ช่องที่ยังว่างเป็นเศษส่วนเท่าไรของแปลง', c:['2/5','3/5','2/3','5/2'], w:'ว่าง 5 − 3 = 2 ช่อง จากทั้งหมด 5 ช่อง = 2/5'},
+    {p:'🎂', s:'fr-s2', q:'ตัดเค้ก 4 ชิ้น ใหญ่บ้างเล็กบ้าง กินไป 1 ชิ้น เรียกว่ากิน 1/4 ของเค้กได้ไหม', c:['ไม่ได้ เพราะชิ้นไม่เท่ากัน','ได้ เพราะมี 4 ชิ้น','ได้ ถ้ากินชิ้นใหญ่สุด','ได้เสมอ ไม่ว่าตัดแบบไหน'], w:'เศษส่วนต้องแบ่งเป็นส่วนเท่า ๆ กันเท่านั้น'},
+    {p:'🤔', s:'fr-s3', q:'แปลง A ปลูกพริก 3/5 แปลง B ปลูก 7/10 (ขนาดเท่ากัน) ทำไมนับช่องเทียบกันตรง ๆ ไม่ได้', c:['ช่องของสองแปลงใหญ่ไม่เท่ากัน','เพราะ 7 มากกว่า 3','เพราะแปลงขนาดเท่ากัน','นับได้ ดูแค่ตัวบนก็พอ'], w:'ช่องของ A ใหญ่กว่าช่องของ B · ต้องซอยให้ช่องเล็กเท่ากันก่อน เช่น 100 ช่อง'},
+    {p:'✂️', s:'fr-s3', q:'แปลง A (5 ช่อง ปลูก 3 ช่อง) ซอยใหม่เป็น 100 ช่องเล็กเท่ากัน พริกอยู่กี่ช่องเล็ก', c:['60','30','35','15'], w:'1 ช่องใหญ่ = 100 ÷ 5 = 20 ช่องเล็ก · 3 ช่องใหญ่ = 3 × 20 = 60'},
+    {p:'💯', s:'fr-s3', pc:'s1', q:'60 ส่วนใน 100 ส่วน เรียกอีกอย่างว่าอะไร', c:['ร้อยละ 60 (60%)','ร้อยละ 40 (40%)','60 บาท','6%'], w:'ส่วนใน 100 เรียกว่า ร้อยละ หรือเปอร์เซ็นต์ (%) · 60 ใน 100 = ร้อยละ 60'}
+  ],
+  fr2:[
+    {p:'✂️', s:'frL2', q:'1/2 ซอยทุกช่องเป็น 2 ชิ้นเท่ากัน จะเขียนได้ว่าอะไร', c:['2/4','1/4','2/2','1/3'], w:'ตัวล่าง 2 × 2 = 4 · ตัวบน 1 × 2 = 2 · พริกที่ปลูกเท่าเดิม'},
+    {p:'🟰', s:'frL2', q:'ทำไม 1/2 กับ 2/4 คือปริมาณเท่ากัน', c:['ซอยช่องให้เล็กลง แต่ส่วนที่ปลูกไว้เท่าเดิม','เพราะ 2/4 มีตัวเลขมากกว่า','เพราะบวก 1 ทั้งตัวบนและตัวล่าง','ไม่เท่ากัน 2/4 มากกว่า'], w:'แค่นับเป็นชิ้นเล็กลง ของจริงไม่ได้เพิ่มหรือลด'},
+    {p:'🔙', s:'frL2', q:'3/5 อยากให้ตัวล่างเป็น 100 ต้องซอยช่องละกี่ชิ้น', c:['20','95','5','105'], w:'5 × ▢ = 100 → คิดย้อน ▢ = 100 ÷ 5 = 20'},
+    {p:'💯', s:'frL2', q:'3/5 = ▢/100 ▢ เท่ากับเท่าไร', c:['60','20','300','8'], w:'ซอยช่องละ 20 · ตัวบนก็คูณด้วย: 3 × 20 = 60'},
+    {p:'🌾', s:'frL2', pc:'s2', q:'7/10 เท่ากับร้อยละเท่าไร', c:['70','7','17','10'], w:'10 × ▢ = 100 → ▢ = 10 · 7 × 10 = 70 → ร้อยละ 70'},
+    {p:'🍰', s:'frL2', pc:'s2', q:'1/4 เท่ากับร้อยละเท่าไร', c:['25','4','14','40'], w:'100 ÷ 4 = 25 · 1 × 25 = 25 → ร้อยละ 25'},
+    {p:'🌶️', s:'fr-s3', q:'แปลง A ปลูกพริก 3/5 แปลง B ปลูก 7/10 (ขนาดเท่ากัน) แปลงไหนปลูกมากกว่า', c:['B เพราะ 70/100 มากกว่า 60/100','A เพราะช่องใหญ่กว่า','เท่ากัน','เทียบไม่ได้ เพราะตัวล่างไม่เท่ากัน'], w:'ทำให้ตัวล่างเป็น 100 ทั้งคู่: A = 60/100 · B = 70/100 → B มากกว่า'},
+    {p:'🔑', s:'frL2', q:'ซอยช่องเพื่อเปลี่ยนตัวล่าง ข้อไหนถูก', c:['ตัวบนต้องคูณด้วยเลขเดียวกับตัวล่าง','คูณเฉพาะตัวล่าง ตัวบนคงเดิม','บวกเลขเดียวกันทั้งตัวบนและตัวล่าง','คูณเฉพาะตัวบน'], w:'ซอยทุกช่อง ทั้งช่องที่ปลูกและช่องว่าง จึงคูณทั้งตัวบนและตัวล่างด้วยเลขเดียวกัน'},
+    {p:'🧩', s:'frL2', q:'7/20 เท่ากับร้อยละเท่าไร', c:['35','27','70','140'], w:'20 × ▢ = 100 → ▢ = 5 · 7 × 5 = 35 → ร้อยละ 35'}
+  ],
+  fr3:[
+    {p:'🌱', s:'fr-p1', pc:'s3', q:'เพาะต้นกล้า 100 ต้น ตายร้อยละ 20 ตายกี่ต้น', c:['20','80','5','120'], w:'ร้อยละ 20 = ทุก 100 ต้น ตาย 20 · มี 100 ต้นพอดี จึงตาย 20 ต้น'},
+    {p:'🌱', s:'fr-p1', pc:'s3', q:'เพาะต้นกล้า 50 ต้น ตายร้อยละ 20 ตายกี่ต้น', c:['10','20','40','30'], w:'50 = ครึ่งของ 100 · ตายครึ่งของ 20 = 10 ต้น'},
+    {p:'🌿', s:'fr-p1', pc:'s3', q:'เพาะต้นกล้า 200 ต้น งอกร้อยละ 90 งอกกี่ต้น', c:['180','90','110','290'], w:'200 = 2 เท่าของ 100 · งอก 2 × 90 = 180 ต้น'},
+    {p:'🫘', s:'fr-p2', pc:'s4', q:'หว่าน 50 เมล็ด งอก 40 เมล็ด งอกร้อยละเท่าไร', c:['80','40','90','10'], w:'40/50 ซอยช่องละ 2 → 80/100 = ร้อยละ 80'},
+    {p:'📝', s:'fr-p2', pc:'s4', q:'ทำข้อสอบ 20 ข้อ ถูก 15 ข้อ คิดเป็นร้อยละเท่าไร', c:['75','15','85','25'], w:'20 × ▢ = 100 → ▢ = 5 · 15 × 5 = 75 → ร้อยละ 75'},
+    {p:'🧺', s:'fr-p3', q:'ขายต้นกล้าไปแล้วร้อยละ 25 นับได้ 30 ต้น เขียนเป็นสมการได้ว่าอะไร', c:['1/4 ของ ▢ = 30','▢ = 30 + 25','▢ + 25 = 30','30 × 25 = ▢'], w:'ร้อยละ 25 = 25/100 = 1/4 · ไม่รู้จำนวนทั้งหมด จึงให้เป็น ▢'},
+    {p:'🔙', s:'fr-p3', q:'1/4 ของ ▢ = 30 ▢ เท่ากับเท่าไร', c:['120','30','34','26'], w:'1/4 ของ ▢ = ▢ ÷ 4 = 30 → คิดย้อน ▢ = 30 × 4 = 120'},
+    {p:'🥭', s:'fr-p3', q:'ขายมะม่วงไปแล้วร้อยละ 50 คือ 45 ลูก ตอนแรกมีกี่ลูก', c:['90','45','95','50'], w:'ร้อยละ 50 = 50/100 = 1/2 = ครึ่งหนึ่ง · ครึ่งของ ▢ = 45 → ▢ = 45 × 2 = 90'},
+    {p:'🔎', s:'fr-p3', q:'ตรวจคำตอบ: ร้อยละ 25 ของ 120 เท่ากับ 30 จริงไหม', c:['จริง เพราะ 120 ÷ 4 = 30','ไม่จริง ได้ 25','ไม่จริง ได้ 95','ตรวจไม่ได้ ต้องใช้เครื่องคิดเลข'], w:'ร้อยละ 25 = 1/4 · 120 ÷ 4 = 30 ✅'}
   ]
 };
 const LEVELS = [
@@ -739,11 +867,15 @@ const LEVELS = [
   {ch:'c0', id:'c03', icon:'🌳', name:'ด่าน 3 · ต้นไม้ใหญ่', sub:'เดาแบบมีเหตุผล · ตรวจคำตอบ', cls:'c2'},
   {ch:'bal', id:'bal1', icon:'🌱', name:'ด่าน 1 · เมล็ด', sub:'กฎตาชั่ง · ถุงปริศนา', cls:'c6'},
   {ch:'bal', id:'bal2', icon:'🌿', name:'ด่าน 2 · ต้นกล้า', sub:'ถุงหลายใบ ต้องแบ่ง', cls:'c5'},
-  {ch:'bal', id:'bal3', icon:'🌳', name:'ด่าน 3 · ต้นไม้ใหญ่', sub:'ถุงสองข้าง · = แปลว่าอะไร', cls:'c2'}
+  {ch:'bal', id:'bal3', icon:'🌳', name:'ด่าน 3 · ต้นไม้ใหญ่', sub:'ถุงสองข้าง · = แปลว่าอะไร', cls:'c2'},
+  {ch:'fr', id:'fr1', icon:'🌱', name:'ด่าน 1 · เมล็ด', sub:'เศษส่วน · แบ่งเป็น 100', cls:'c6'},
+  {ch:'fr', id:'fr2', icon:'🌿', name:'ด่าน 2 · ต้นกล้า', sub:'ซอยช่อง · เศษส่วน → ร้อยละ', cls:'c5'},
+  {ch:'fr', id:'fr3', icon:'🌳', name:'ด่าน 3 · ต้นไม้ใหญ่', sub:'โจทย์ร้อยละ 3 แบบ', cls:'c2'}
 ];
 const CHS = {
   c0:{n:'ลองเดาก่อน', i:'🚪', scr:'c0'},
-  bal:{n:'ตาชั่ง', i:'⚖️', scr:'bal'}
+  bal:{n:'ตาชั่ง', i:'⚖️', scr:'bal'},
+  fr:{n:'แบ่งของ', i:'🍕', scr:'fr'}
 };
 
 
@@ -961,18 +1093,135 @@ balInit($('bs1')); sb(0,0);
 pzMount('pz1'); pzMount('pz2'); pzMount('pz3');
 drill(0); drawGuess();
 
+/* ============ บท 2 · แบ่งของ ============ */
+const tabOn = btn => { if(!btn) return; btn.parentNode.querySelectorAll('.tab').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); };
+const frc = (a,b,cls='') => `<span class="frc ${cls}"><span>${a}</span><span>${b}</span></span>`;
+
+// 🌱 ขั้น 1: ขนม 1 ชิ้น แบ่ง n คน (ยังไม่ใช้สัญลักษณ์เศษส่วน — สอนในขั้น 2)
+function pie1(n,btn){
+  tabOn(btn);
+  const cx=180, cy=100, r=82; let s='';
+  for(let i=0;i<n;i++){
+    const a0=-Math.PI/2+i*2*Math.PI/n, a1=a0+2*Math.PI/n;
+    const p=(a)=>`${(cx+r*Math.cos(a)).toFixed(1)},${(cy+r*Math.sin(a)).toFixed(1)}`;
+    s+=`<path d="M${cx},${cy} L${p(a0)} A${r},${r} 0 0 1 ${p(a1)} Z" fill="${i===0?'#ffb84d':'#f6e3c2'}" stroke="#a8742a" stroke-width="2.5"/>`;
+  }
+  const am=-Math.PI/2+Math.PI/n;
+  s+=`<text x="${(cx+r*.55*Math.cos(am)).toFixed(1)}" y="${(cy+r*.55*Math.sin(am)+8).toFixed(1)}" text-anchor="middle" font-size="24">🙂</text>`;
+  $('pie1').innerHTML=s;
+  $('pie1fb').innerHTML=`ตัดเป็น <b>${n} ชิ้นเท่า ๆ กัน</b> · แต่ละคนได้ <b>1 ชิ้น จาก ${n} ชิ้น</b> (ชิ้นสีเข้ม) · <b>ไม่ถึง 1 ชิ้นเต็ม</b> 🤔`;
+}
+
+// 🌱 ขั้น 2: แปลง 5 ช่อง แตะปลูก
+let plot5=[1,1,1,0,0];
+function plot5Draw(){
+  const w=62, gap=8, x0=(360-(5*w+4*gap))/2; let s='';
+  plot5.forEach((v,i)=>{ const x=x0+i*(w+gap);
+    s+=`<g style="cursor:pointer" onclick="plot5Tap(${i})"><rect x="${x}" y="12" width="${w}" height="96" rx="8" fill="${v?'#c9f2c0':'#e8d5b5'}" stroke="#8a6a3a" stroke-width="2"/>`
+      +`<text x="${x+w/2}" y="${v?72:67}" text-anchor="middle" font-size="${v?32:18}" fill="#8a6a3a">${v?'🌶️':'ว่าง'}</text></g>`;
+  });
+  $('plot5').innerHTML=s;
+  const k=plot5.filter(Boolean).length;
+  $('plot5fb').innerHTML=`ปลูกแล้ว <b>${k} ช่อง</b> จากทั้งหมด <b>5 ช่อง</b> → เขียนว่า ${frc(k,5,'big')}`;
+}
+function plot5Tap(i){ plot5[i]=plot5[i]?0:1; plot5Draw(); }
+
+// 🌱 ขั้น 3: แปลง A 3/5 กับ B 7/10 → ซอยเป็น 100 ช่องเล็ก
+let cut100On=false;
+function gridAB(){
+  const g=(n,d)=>{ const sw=100/d; let s='';
+    for(let i=0;i<d;i++) s+=`<rect x="${i*sw}" y="0" width="${sw}" height="100" fill="${i<n?'#ff9d42':'#f3ead8'}"/>`;
+    if(cut100On) for(let j=1;j<10;j++) s+=`<line x1="${j*10}" y1="0" x2="${j*10}" y2="100" stroke="rgba(0,0,0,.28)" stroke-width=".7"/><line x1="0" y1="${j*10}" x2="100" y2="${j*10}" stroke="rgba(0,0,0,.28)" stroke-width=".7"/>`;
+    for(let i=1;i<d;i++) s+=`<line x1="${i*sw}" y1="0" x2="${i*sw}" y2="100" stroke="#8a6a3a" stroke-width="1.8"/>`;
+    return s+`<rect x="1.5" y="1.5" width="97" height="97" fill="none" stroke="#8a6a3a" stroke-width="3"/>`; };
+  $('gA').innerHTML=g(3,5); $('gB').innerHTML=g(7,10);
+  $('gAn').innerHTML=cut100On?'<b>60</b> ช่องเล็ก จาก 100':'3 ช่อง จาก 5';
+  $('gBn').innerHTML=cut100On?'<b>70</b> ช่องเล็ก จาก 100':'7 ช่อง จาก 10';
+  $('cut100b').textContent=cut100On?'↩️ กลับเป็นช่องใหญ่':'✂️ ซอยทั้งสองแปลงเป็น 100 ช่องเล็กเท่ากัน';
+  $('cut100fb').innerHTML=cut100On
+    ?'แปลง A: 1 ช่องใหญ่ = 100 ÷ 5 = 20 ช่องเล็ก → 3 ช่อง = 3 × 20 = <b>60</b> ช่องเล็ก<br>แปลง B: 1 ช่องใหญ่ = 100 ÷ 10 = 10 ช่องเล็ก → 7 ช่อง = 7 × 10 = <b>70</b> ช่องเล็ก<br>✅ ช่องเล็กเท่ากันแล้ว · <b>B ปลูกพริกมากกว่า</b> (70 มากกว่า 60)'
+    :'ตอนนี้ช่องของ A ใหญ่กว่าช่องของ B · ลองกดปุ่มด้านบนดู 👆';
+}
+function cut100(){ cut100On=!cut100On; gridAB(); }
+
+// 🌿 ซอยช่องให้ตัวล่างเป็น 100 · ซอยได้เฉพาะจำนวนที่พาไปถึง 100 พอดี
+const CUT=[[1,2],[3,5],[1,4],[7,20]]; let cutI=0, cutJ=0;
+const cutKs = d => { const m=100/d; return Array.from({length:m},(_,i)=>i+1).filter(k=>m%k===0); };
+function cutPick(i,btn){ cutI=i; cutJ=0; tabOn(btn); cutDraw(); }
+function cutK(dir){ const ks=cutKs(CUT[cutI][1]); cutJ=Math.max(0,Math.min(ks.length-1,cutJ+dir)); cutDraw(); }
+function cutDraw(){
+  const [n,d]=CUT[cutI], k=cutKs(d)[cutJ], N=d*k, W=340, x0=10, fw=W*n/d;
+  let s=`<rect x="${x0}" y="10" width="${fw}" height="50" fill="#ff9d42"/><rect x="${x0+fw}" y="10" width="${W-fw}" height="50" fill="#f3ead8"/>`;
+  if(k>1) for(let i=1;i<N;i++) s+=`<line x1="${(x0+i*W/N).toFixed(2)}" y1="10" x2="${(x0+i*W/N).toFixed(2)}" y2="60" stroke="rgba(0,0,0,.3)" stroke-width=".8"/>`;
+  for(let i=1;i<d;i++) s+=`<line x1="${(x0+i*W/d).toFixed(2)}" y1="10" x2="${(x0+i*W/d).toFixed(2)}" y2="60" stroke="#8a6a3a" stroke-width="2.5"/>`;
+  s+=`<rect x="${x0}" y="10" width="${W}" height="50" fill="none" stroke="#8a6a3a" stroke-width="3"/>`;
+  $('cutBar').innerHTML=s;
+  $('cutOut').innerHTML=(k===1
+      ? ln(`${n}/${d}`,`แบ่ง ${d} ช่องใหญ่ ปลูก ${n} ช่อง · ยังไม่ได้ซอย`)
+      : ln(`${n}/${d} = ${n*k}/${N}`,`ซอยทุกช่องเป็น ${k} ชิ้น · ตัวล่าง ${d} × ${k} = ${N} · ตัวบน ${n} × ${k} = ${n*k}`))
+    +(N===100
+      ? ln(`= ร้อยละ ${n*k}`,'🎯 ตัวล่างเป็น 100 แล้ว อ่านเป็นร้อยละได้เลย','ok')
+      : ln(`${d} × ▢ = 100 → ▢ = ${100/d}`,`อยากให้ตัวล่างเป็น 100: ช่องใหญ่เดิม 1 ช่อง ต้องเป็น ${100/d} ชิ้นเล็ก · กด ✂️ ต่อ`));
+}
+
+// 🌳 โจทย์ร้อยละ 3 แบบ · ทีละบรรทัดพร้อมเหตุผล
+const PCT3=[
+  {h:'หาส่วน · รู้ร้อยละ รู้ทั้งหมด', story:'🌱 เพาะ<b>ต้นกล้าพริก 50 ต้น</b> ตาย<b>ร้อยละ 20</b><br>ตายกี่ต้น?', ok:3,
+   l:[['▢ = ต้นที่ตาย','ยังไม่รู้ว่าตายกี่ต้น จึงให้เป็นกล่อง ▢'],
+      ['ร้อยละ 20 = 20/100','ทุก 100 ต้น ตาย 20 ต้น'],
+      ['50 = 100 ÷ 2','เรามีแค่ 50 ต้น = ครึ่งของ 100'],
+      ['▢ = 20 ÷ 2 = 10','ต้นกล้าครึ่งเดียว ตายก็ครึ่งเดียว · ตาย 10 ต้น'],
+      ['ตรวจ: 10/50 = 20/100 ✅','ซอยช่องละ 2: 10 × 2 = 20 · 50 × 2 = 100 → ร้อยละ 20 จริง'],
+      ['ถ้ามี 200 ต้น: ▢ = 20 × 2 = 40','200 = 2 เท่าของ 100 · ต้นกล้า 2 เท่า ตายก็ 2 เท่า']],
+   x:'<a class="bridge" href="../percent/#s3" target="_blank" rel="noopener">🔗 ลองตัวเลขอื่นเอง · แอป <b>สนุกกับเปอร์เซ็นต์</b> บท "หา % ของจำนวน" ↗</a>'},
+  {h:'หาร้อยละ · รู้ส่วน รู้ทั้งหมด', story:'🌿 หว่าน<b>เมล็ดผักบุ้ง 50 เมล็ด</b> งอก <b>40 เมล็ด</b><br>งอกร้อยละเท่าไร?', ok:3,
+   l:[['งอก 40/50','งอก 40 เมล็ด จากทั้งหมด 50 เมล็ด'],
+      ['50 × ▢ = 100 → ▢ = 2','อยากให้ตัวล่างเป็น 100 ต้องซอยช่องละ 100 ÷ 50 = 2 ชิ้น (ชั้น 🌿)'],
+      ['40/50 = 80/100','ตัวบนก็ซอยด้วย: 40 × 2 = 80'],
+      ['= ร้อยละ 80','80 ส่วนใน 100 · งอกร้อยละ 80']],
+   x:'<a class="bridge" href="../percent/#s4" target="_blank" rel="noopener">🔗 ลองตัวเลขอื่นเอง · แอป <b>สนุกกับเปอร์เซ็นต์</b> บท "คิดเป็นกี่ %" ↗</a>'},
+  {h:'หาทั้งหมด · รู้ร้อยละ รู้ส่วน', story:'🧺 ขาย<b>ต้นกล้าไปแล้วร้อยละ 25</b> นับได้ <b>30 ต้น</b><br>ตอนแรกมีต้นกล้ากี่ต้น?', ok:4,
+   l:[['ร้อยละ 25 = 25/100','ทุก 100 ชิ้นเล็ก ขายไป 25 ชิ้นเล็ก'],
+      ['25/100 = 1/4','รวบกลับ (ตรงข้ามกับซอย): รวบทุก 25 ชิ้นเล็กเป็น 1 ชิ้นใหญ่ · ตัวล่าง 100 ÷ 25 = 4 ชิ้นใหญ่ · ตัวบน 25 ÷ 25 = 1 ชิ้นใหญ่'],
+      ['1/4 ของ ▢ = 30','ต้นกล้าทั้งหมด ▢ ต้น แบ่ง 4 ส่วนเท่ากัน · ขายไป 1 ส่วน = 30 ต้น'],
+      ['▢ ÷ 4 = 30','"1/4 ของ" ก็คือ แบ่ง 4 ส่วน เอามา 1 ส่วน'],
+      ['▢ = 30 × 4 = 120','คิดย้อน: โจทย์หาร 4 มา เราย้อนด้วยคูณ 4 (บท 🚪)'],
+      ['ตรวจ: 120 ÷ 4 = 30 ✅','ตอนแรกมี 120 ต้น · ขายไป 1/4 = 30 ต้นจริง']],
+   x:'<div class="memo">🧩 แบบนี้<b>ไม่รู้จำนวนทั้งหมด</b> จึงคิดตรง ๆ ไม่ได้ · ต้องเขียนเป็นสมการที่มี ▢ แล้วคิดย้อน · บทถัดไป 📦 <b>กล่องปิด</b> จะฝึกเรื่องนี้ให้คล่อง</div>'}
+];
+let p3=0, p3i=0;
+function pct3(i,btn){
+  p3=i; p3i=0; tabOn(btn||document.querySelectorAll('#pct3t .tab')[i]);
+  const P=PCT3[i];
+  $('pct3n').textContent='①②③'[i]; $('pct3h').textContent=P.h; $('pct3s').innerHTML=P.story;
+  $('pct3l').innerHTML=''; $('pct3x').innerHTML=''; $('pct3b').style.display='';
+  pct3next();
+}
+function pct3next(){
+  const P=PCT3[p3]; if(p3i>=P.l.length) return;
+  $('pct3l').insertAdjacentHTML('beforeend',ln(...P.l[p3i],p3i===P.ok?'ok':''));
+  p3i++;
+  if(p3i>=P.l.length){ $('pct3b').style.display='none'; $('pct3x').innerHTML=P.x; }
+}
+pie1(2); plot5Draw(); gridAB(); cutDraw(); pct3(0);
+
 /* ============ ตอบผิด → บอกว่าติดขั้นไหน + ปุ่มย้อนไปขั้นนั้น ============ */
-// [ชั้น 0/1/2, ชื่อขั้น] · คีย์ = id ของขั้นในหน้าบท
+// [ชั้น 0/1/2, ชื่อขั้น, (ทำก่อนเลื่อน), (id ที่จะเลื่อนไป)] · คีย์ = id ของขั้นในหน้าบท
 const STEPS={
   'c0-s1':[0,'ลองเดา: ถ้า… แล้ว…'], 'c0-s2':[0,'คิดย้อนทีละขั้น'], 'c0-s3':[0,'เขียนสั้นด้วยกล่อง ▢'],
   'c0L2':[1,'คิดย้อน: บวก↔ลบ · คูณ↔หาร'], 'c0L3':[2,'เดาแบบมีเหตุผล'],
   'bal-s1':[0,'ลองเล่นตาชั่ง'], 'bal-s2':[0,'ถุงปริศนา'], 'bal-s3':[0,'กฎข้อเดียวของตาชั่ง'],
-  'balL2':[1,'ถุงหลายใบ ต้องแบ่ง'], 'balL3':[2,'ถุงอยู่ทั้งสองข้าง'], 'bal-eq':[2,'= ไม่ได้แปลว่า "คำตอบคือ"']
+  'balL2':[1,'ถุงหลายใบ ต้องแบ่ง'], 'balL3':[2,'ถุงอยู่ทั้งสองข้าง'], 'bal-eq':[2,'= ไม่ได้แปลว่า "คำตอบคือ"'],
+  'fr-s1':[0,'ไม่ถึง 1 ชิ้น เลขนับบอกไม่ได้'], 'fr-s2':[0,'เขียนเศษส่วน: ตัวบน · ตัวล่าง'], 'fr-s3':[0,'แบ่งเป็น 100 = ร้อยละ'],
+  'frL2':[1,'ซอยช่องให้ตัวล่างเป็น 100'], 'frL3':[2,'โจทย์ร้อยละ 3 แบบ'],
+  'fr-p1':[2,'โจทย์ร้อยละ ① หาส่วน',()=>pct3(0),'fr-p'], 'fr-p2':[2,'โจทย์ร้อยละ ② หาร้อยละ',()=>pct3(1),'fr-p'], 'fr-p3':[2,'โจทย์ร้อยละ ③ หาทั้งหมด',()=>pct3(2),'fr-p']
 };
+// ฝึกพื้นร้อยละในแอป percent (ไม่เขียนบทร้อยละซ้ำ) · คีย์ = id บทใน percent
+const PC={s1:'เปอร์เซ็นต์คืออะไร', s2:'% เศษส่วน ทศนิยม', s3:'หา % ของจำนวน', s4:'คิดเป็นกี่ %'};
 function goStep(s){
-  const [lay]=STEPS[s], scr=CHS[curCh].scr;
-  readLayer(scr,lay);
-  setTimeout(()=>{ const el=$(s); if(el){ el.scrollIntoView({behavior:'smooth',block:'start'}); el.classList.add('flash'); setTimeout(()=>el.classList.remove('flash'),1800); } },500);
+  const [lay,,fn,to]=STEPS[s], scr=CHS[curCh].scr;
+  readLayer(scr,lay); if(fn) fn();
+  setTimeout(()=>{ const el=$(to||s); if(el){ el.scrollIntoView({behavior:'smooth',block:'start'}); el.classList.add('flash'); setTimeout(()=>el.classList.remove('flash'),1800); } },500);
 }
 
 let curCh='c0';
@@ -1085,7 +1334,8 @@ function afterAnswer(q,ok){
   persist();
   // ตอบผิด → บอกว่าติดขั้นไหนในบท + ปุ่มพากลับไปขั้นนั้น (กลไกสำหรับคนเรียนรู้ช้า)
   const st=!ok&&q.s&&STEPS[q.s];
-  $('q-why').innerHTML='💡 '+q.w+(st?`<div class="stuck">📍 ข้อนี้ใช้ขั้น <b>${st[1]}</b> (${LNM[st[0]]} ${LIC[st[0]]})<br><button class="tab on" style="margin-top:6px" onclick="goStep('${q.s}')">↩️ กลับไปดูขั้นนี้</button></div>`:'');
+  $('q-why').innerHTML='💡 '+q.w+(st?`<div class="stuck">📍 ข้อนี้ใช้ขั้น <b>${st[1]}</b> (${LNM[st[0]]} ${LIC[st[0]]})<br><button class="tab on" style="margin-top:6px" onclick="goStep('${q.s}')">↩️ กลับไปดูขั้นนี้</button></div>`:'')
+    +(!ok&&q.pc&&PC[q.pc]?`<a class="bridge" href="../percent/#${q.pc}" target="_blank" rel="noopener">🔗 ฝึกพื้นเพิ่ม · แอป <b>สนุกกับเปอร์เซ็นต์</b> บท "${PC[q.pc]}" ↗</a>`:'');
   $('q-why').style.display='block';
   $('q-next').textContent=isLast()?'ดูผล 🏁':'ข้อต่อไป ➡️';
   $('q-next').style.display='inline-block';
@@ -1183,6 +1433,9 @@ function miniConfetti(){ spawnConfetti(14); }
 function bigConfetti(){ spawnConfetti(60); }
 
 /* ลิงก์ตรงเข้าบท: index.html#bal (ใช้ลิงก์ข้ามแอป เช่นจาก percent) */
-{ const h=decodeURIComponent(location.hash.slice(1)); if(h&&$(h)&&$(h).classList.contains('screen')) go(h); }
+// ลิงก์ตรง: #ชื่อบท (เช่น #fr) หรือ #ขั้นในบท จาก STEPS (เช่น #fr-p3 · #c0L3) — ใช้กับลิงก์ข้ามแอป
+{ const h=decodeURIComponent(location.hash.slice(1)), e=h&&$(h);
+  if(e&&e.classList.contains('screen')) go(h);
+  else if(STEPS[h]){ const t=$(STEPS[h][3]||h), sc=t&&t.closest('.screen'), k=sc&&Object.keys(CHS).find(k=>CHS[k].scr===sc.id); if(k){ curCh=k; goStep(h); } } }
 </script>
 </html>
