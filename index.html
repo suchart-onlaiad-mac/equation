@@ -754,7 +754,7 @@
 
       <div class="layer L1">
         <h3>🌱 ชั้นเมล็ด · รู้แค่นี้ก็เข้าใจ</h3>
-        <p>บท ⚖️ แก้โจทย์ด้วย<b>ภาพตาชั่ง</b> · บท 📦 เขียนโจทย์ด้วย <b>x</b> ได้แล้ว · บทนี้แก้ด้วยการ<b>เขียนบรรทัด</b>อย่างเดียว ไม่ต้องวาดภาพ ✍️</p>
+        <p>บท ⚖️ แก้โจทย์ด้วย<b>ภาพตาชั่ง</b> · บท 📦 เขียนโจทย์ด้วย <b>x</b> ได้แล้ว · บทนี้ดูภาพตาชั่งคู่กับบรรทัดก่อน แล้วค่อย ๆ เหลือแต่<b>บรรทัด</b> ✍️</p>
 
         <div class="step-h" id="sol-s1"><span class="sn">1</span> ⚖️ ภาพตาชั่ง กับ บรรทัดที่เขียน · คู่กันทุกขั้น</div>
         <p class="tip">ถุงปริศนาเดิมจากบท ⚖️ · ถุง 2 ใบ กับลูกตุ้ม 1 ลูก หนักเท่ากับลูกตุ้ม 7 ลูก · กด 👉 แล้วดูว่า<b>ภาพแต่ละขั้น</b>เขียนเป็น<b>บรรทัด</b>ว่าอะไร</p>
@@ -766,10 +766,19 @@
         <div class="step-h" id="sol-s2"><span class="sn">2</span> 🧦 ของคู่ตรงข้าม · แกะชั้นนอกก่อน</div>
         <p class="tip">อยากให้ x <b>อยู่ลำพัง</b> · ดูว่า x มีอะไรติดอยู่ แล้วทำ<b>สิ่งที่ตรงข้าม</b>ทั้งสองข้าง</p>
         <div class="memo">🔁 <b>ของคู่ตรงข้าม</b><br>
-        x ติด <b>+ 5</b> อยู่ → แก้ด้วย <b>− 5</b> ทั้งสองข้าง<br>
-        x ติด <b>− 5</b> อยู่ → แก้ด้วย <b>+ 5</b> ทั้งสองข้าง<br>
-        <b>3x</b> (x ถูกคูณ 3) → แก้ด้วย <b>÷ 3</b> ทั้งสองข้าง<br>
-        <b>x ÷ 3</b> (x ถูกแบ่ง 3) → แก้ด้วย <b>× 3</b> ทั้งสองข้าง</div>
+        x ติด <b>+&nbsp;5</b> อยู่ → แก้ด้วย <b>−&nbsp;5</b> ทั้งสองข้าง<br>
+        x ติด <b>−&nbsp;5</b> อยู่ → แก้ด้วย <b>+&nbsp;5</b> ทั้งสองข้าง<br>
+        <b>3x</b> (x ถูกคูณ 3) → แก้ด้วย <b>÷&nbsp;3</b> ทั้งสองข้าง<br>
+        <b>x&nbsp;÷&nbsp;3</b> (x ถูกแบ่ง 3) → แก้ด้วย <b>×&nbsp;3</b> ทั้งสองข้าง</div>
+        <p class="tip" style="margin-top:12px">ดูของคู่ตรงข้าม<b>บนตาชั่ง</b> · เลือกโจทย์ แล้วกด 👉</p>
+        <div class="tabs" id="sl4t">
+          <button class="tab on" onclick="sl4(0,this)">① x + 6 = 11</button>
+          <button class="tab" onclick="sl4(1,this)">② x − 3 = 4</button>
+          <button class="tab" onclick="sl4(2,this)">③ x ÷ 3 = 2</button>
+        </div>
+        <div class="fig"><svg class="bsvg" id="sl4svg" viewBox="0 0 360 230"></svg></div>
+        <div class="lines" id="sl4l"></div>
+        <div class="center" style="margin-top:8px"><button class="btn alt" id="sl4b" onclick="sl4Next()">👉 ดูขั้นต่อไป</button></div>
         <div class="memo">⚖️ <b>× 3 ทั้งสองข้าง</b> ยังเป็นกฎตาชั่งข้อเดิม · เพิ่มของในจานเป็น 3 เท่า<b>ทั้งสองจาน</b> คานก็ยังตรง (เหมือนการแบ่งในบท ⚖️ แต่กลับทาง)<br>✂️ คูณหรือแบ่ง ต้องทำกับ<b>ทุกก้อน</b>ในข้างนั้น · (x ÷ 3 + 2) × 3 = x + 6 · ไม่ใช่ x + 2</div>
         <p class="tip" style="margin-top:12px">ถ้า x ติดอยู่หลายอย่าง ทำอะไรก่อน? ลองคิดจาก<b>การใส่รองเท้า</b>: ใส่ถุงเท้าก่อน แล้วค่อยใส่รองเท้า · ตอนถอดต้อง<b>ถอดรองเท้าก่อน</b> · กด 👉 ดูว่า 3x + 5 = 20 สร้างขึ้นมายังไง แล้วแกะกลับยังไง</p>
         <div class="lines" id="sl2l"></div>
@@ -1536,7 +1545,7 @@ function sb(dl,dr){
   if(nl>10||nr>10){ $('bs1fb').innerHTML='🙂 จานเต็มแล้ว ลองเอาออกบ้าง'; return; }
   sbS={l:nl,r:nr};
   const eq=balDraw($('bs1'),{b:0,w:nl},{b:0,w:nr},0,false);
-  $('bs1eq').innerHTML=eq?`${nl} = ${nr}`:`<span style="color:#ff5f5f">${nl} ≠ ${nr}</span>`;
+  $('bs1eq').innerHTML=eq?`${nl} = ${nr}`:`<span style="color:#ff5f5f">${nl} = ${nr} ❌</span>`;
   const both=dl&&dr;
   $('bs1fb').innerHTML=eq
     ?(both?'✅ <b>ทำเหมือนกันทั้งสองข้าง → คานยังตรง</b> · นี่คือเคล็ดลับ':'✅ คานตรง · สองข้างหนักเท่ากัน')
@@ -1577,7 +1586,7 @@ function pzShow(id,msg){
   const S=PZS[id], box=$(id);
   const solved=S.L.b===1&&S.L.w===0&&S.R.b===0;
   const eq=balDraw(box.querySelector('svg'),S.L,S.R,S.x,solved&&!S.tilt);
-  box.querySelector('.eqline').innerHTML=eq?`${sideTxt(S.L.b,S.L.w)} = ${sideTxt(S.R.b,S.R.w)}`:`<span style="color:#ff5f5f">${sideTxt(S.L.b,S.L.w)} ≠ ${sideTxt(S.R.b,S.R.w)}</span>`;
+  box.querySelector('.eqline').innerHTML=eq?`${sideTxt(S.L.b,S.L.w)} = ${sideTxt(S.R.b,S.R.w)}`:`<span style="color:#ff5f5f">${sideTxt(S.L.b,S.L.w)} = ${sideTxt(S.R.b,S.R.w)} ❌</span>`;
   if(msg) box.querySelector('.info').innerHTML=msg;
   return solved&&eq;
 }
@@ -1598,10 +1607,10 @@ function pzOp(id,o){
   S.hist.push(cp({L,R}));
   if(o==='w'){ L.w--; R.w--; } else if(o==='wL'){ L.w--; } else if(o==='b'){ L.b--; R.b--; }
   else { const n=+o[1]; [L,R].forEach(s=>{ s.b/=n; s.w/=n; }); }
-  const lines=box.querySelector('.lines'), eqTxt=`${sideTxt(L.b,L.w)} ${o==='wL'?'≠':'='} ${sideTxt(R.b,R.w)}`;
+  const lines=box.querySelector('.lines'), eqTxt=`${sideTxt(L.b,L.w)} = ${sideTxt(R.b,R.w)}${o==='wL'?' ❌':''}`;
   if(o==='wL'){
     S.tilt=true;
-    lines.insertAdjacentHTML('beforeend',ln(eqTxt,'⚠️ '+OPS[o][1]+' → คานเอียง · ประโยคนี้ไม่จริงแล้ว','bad'));
+    lines.insertAdjacentHTML('beforeend',ln(eqTxt,'⚠️ '+OPS[o][1]+' → คานเอียง · สองข้างไม่เท่ากันแล้ว ใช้เครื่องหมาย = ไม่ได้','bad'));
     return pzShow(id,'⚠️ <b>ทำข้างเดียว คานเอียงทันที</b> · สองข้างไม่เท่ากันแล้ว · กด ↩️ ย้อน 1 ขั้น');
   }
   lines.insertAdjacentHTML('beforeend',ln(eqTxt,OPS[o][1]));
@@ -1915,6 +1924,60 @@ function sl1Draw(){
   $('sl1fig').style.opacity=Math.max(.12,1-Math.max(0,n-1)*.2);
 }
 function sl1Next(){ stpNext('sl1'); sl1Draw(); }
+// 🌱 ขั้น 2 · ของคู่ตรงข้ามบนตาชั่ง (คานตรงทุกขั้น เพราะทำทั้งสองข้าง)
+// ภาพหลังบรรทัดที่ n: L = ถุงซ้าย {bag:'full'|'cut3'|'third', w:ลูกตุ้ม, g:ลูกที่ถูกหยิบออก(เส้นประ)} · r = ลูกตุ้มขวา
+const SL4=[
+  {x:5, l:[
+    ['x + 6 = 11','ถุง 1 ใบ กับลูกตุ้ม 6 ลูก หนักเท่ากับลูกตุ้ม 11 ลูก · x ติด <b>+&nbsp;6</b>'],
+    ['x + 6 − 6 = 11 − 6','ของคู่ตรงข้ามของ + 6 คือ <b>−&nbsp;6</b> · เอาลูกตุ้มออก 6 ลูกทั้งสองข้าง'],
+    ['x = 5','ซ้ายเหลือถุงลำพัง · ขวา 11 − 6 = 5'],
+    ['ตรวจ: 5 + 6 = 11 ✅','แทนค่าในโจทย์เดิม']],
+   st:[{L:{bag:'full',w:6},r:11},{L:{bag:'full'},r:5},{L:{bag:'full'},r:5,ok:1},{L:{bag:'full'},r:5,ok:1}]},
+  {x:7, l:[
+    ['x − 3 = 4','ถุงถูก<b>หยิบออกไป 3 ลูก</b> (วงเส้นประลอยออกจากถุง ถุงจึงจางลง) · ที่เหลือหนักเท่ากับลูกตุ้ม 4 ลูก · x ติด <b>−&nbsp;3</b>'],
+    ['x − 3 + 3 = 4 + 3','ของคู่ตรงข้ามของ − 3 คือ <b>+&nbsp;3</b> · เติม 3 ลูกคืนถุง ลูกทึบ 3 ลูกลงไปในถุง ถุงกลับมาเต็มใบ · ขวาก็เติม 3 ลูกด้วย คานจึงยังตรง'],
+    ['x = 7','ซ้ายเหลือถุงเต็มใบลำพัง · ขวา 4 + 3 = 7'],
+    ['ตรวจ: 7 − 3 = 4 ✅','แทนค่าในโจทย์เดิม']],
+   st:[{L:{bag:'full',g:3},r:4},{L:{bag:'full',back:3},r:7},{L:{bag:'full'},r:7,ok:1},{L:{bag:'full'},r:7,ok:1}]},
+  {x:6, l:[
+    ['x ÷ 3 = 2','ถุงถูก<b>แบ่ง 3 ส่วน</b> บนจานมีแค่ 1 ส่วน (ส่วนเส้นประไม่อยู่บนจาน) · หนักเท่ากับลูกตุ้ม 2 ลูก · x ติด <b>÷&nbsp;3</b>'],
+    ['x ÷ 3 × 3 = 2 × 3','ของคู่ตรงข้ามของ ÷ 3 คือ <b>×&nbsp;3</b> · ซ้ายเพิ่มเป็น 3 ส่วน = ถุงเต็มใบ · ขวาเพิ่มเป็น 3 เท่าด้วย คานจึงยังตรง'],
+    ['x = 6','ซ้ายเหลือถุงเต็มใบลำพัง · ขวา 2 × 3 = 6'],
+    ['ตรวจ: 6 ÷ 3 = 2 ✅','แทนค่าในโจทย์เดิม']],
+   st:[{L:{bag:'third'},r:2},{L:{bag:'cut3'},r:6},{L:{bag:'full'},r:6,ok:1},{L:{bag:'full'},r:6,ok:1}]}
+];
+let sl4i=0;
+function sl4Items(L,x,ok){
+  // ถุงใหญ่กว่าปกติ (34×39 วางบนจานชิดซ้าย) ให้เห็นส่วน 1 ใน 3 · ลูกตุ้มแถวละ 4 ทางขวาของถุง · ลูกที่ถูกหยิบออก ลอยเหนือถุง (ไม่อยู่บนจาน)
+  const bx=-58, bw=34, bh=39, by=-bh, col=ok?'#39c14a':'#7a5cff';
+  let s='';
+  const g=L.g||L.back||0, ghost=!!L.g;
+  if(L.bag==='third') s=`<rect x="${bx}" y="${-bh/3}" width="${bw}" height="${bh/3}" rx="3" fill="${col}"/>`
+    +`<rect x="${bx}" y="${-bh-10}" width="${bw}" height="${bh*2/3}" rx="5" fill="none" stroke="${col}" stroke-width="1.6" stroke-dasharray="4 3" opacity=".7"/>`;
+  else s=`<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="6" fill="${col}"${ghost?' opacity=".5"':''}/>`
+    +(L.bag==='cut3'?[1,2].map(k=>`<line x1="${bx}" x2="${bx+bw}" y1="${by+k*bh/3}" y2="${by+k*bh/3}" stroke="#fff" stroke-width="2"/>`).join('')
+      :`<text x="${bx+bw/2}" y="${by+bh/2+7}" text-anchor="middle" font-size="20" font-weight="800" fill="#fff" font-family="Kanit,sans-serif">${ok?x:'?'}</text>`);
+  for(let i=0;i<(L.w||0);i++) s+=`<circle cx="${-11+(i%4)*21}" cy="${-10-Math.floor(i/4)*21}" r="9.5" fill="#ff9d42" stroke="#e07a1f" stroke-width="1.5"/>`;
+  // ลูกที่หยิบออก (เส้นประ ลูกศรขึ้น) / ลูกที่เติมคืน (ทึบ ลูกศรลงถุง) · ลอยเหนือถุง ห่างเชือกจาน
+  for(let i=0;i<g;i++) s+=ghost?`<circle cx="${bx-1+i*15}" cy="${by-21}" r="7" fill="none" stroke="#e07a1f" stroke-width="1.6" stroke-dasharray="3 2"/>`
+    :`<circle cx="${bx-1+i*15}" cy="${by-21}" r="7" fill="#ff9d42" stroke="#e07a1f" stroke-width="1.5"/>`;
+  if(g) s+=ghost?`<path d="M${bx+bw/2-6},${by-4} l0,-8 m-3,3 l3,-3 l3,3" fill="none" stroke="#e07a1f" stroke-width="1.6"/>`
+    :`<path d="M${bx+bw/2-6},${by-12} l0,8 m-3,-3 l3,3 l3,-3" fill="none" stroke="#e07a1f" stroke-width="1.6"/>`;
+  return s;
+}
+function sl4Draw(){
+  const P=SL4[sl4i], s=P.st[Math.max(0,STP.sl4.i-1)], svg=$('sl4svg');
+  svg.querySelector('.beam').style.transform='rotate(0deg)';
+  svg.querySelectorAll('.pan').forEach(g=>{ const left=+g.dataset.s<0;
+    g.style.transform='';
+    g.querySelector('.items').innerHTML=left?sl4Items(s.L,P.x,s.ok):sideItems(0,s.r,0,false);
+    g.querySelector('.cnt').textContent=left
+      ?(s.L.bag==='third'?'ถุง ÷ 3':s.L.g?`ถุง − ${s.L.g} ลูก`:s.L.back?'ถุงเต็มใบ':s.L.bag==='cut3'?'3 ส่วน = ถุง 1':'ถุง 1'+(s.L.w?` + ${s.L.w} ลูก`:''))
+      :`${s.r} ลูก`;
+  });
+}
+function sl4(i,btn){ tabOn(btn); sl4i=i; stp('sl4',SL4[i].l,2,null,()=>{ if(STP.sl4) sl4Draw(); }); sl4Draw(); }
+function sl4Next(){ stpNext('sl4'); sl4Draw(); }
 // 🌱 ขั้น 2 · สร้าง → แกะกลับ (ถุงเท้า-รองเท้า)
 const SL2=[
   ['x','เริ่มจากกล่อง x'],
@@ -2124,6 +2187,7 @@ function spTap(j){
   else $('spFb').innerHTML=`🤔 บรรทัดที่ ${j+1} ทำต่อจากบรรทัดก่อนได้ถูก · แต่บรรทัดก่อนหน้า<b>ผิดมาแล้ว</b> · ย้อนขึ้นไปดู`;
 }
 balInit($('sl1svg')); stp('sl1',SL1,4); sl1Draw();
+balInit($('sl4svg')); sl4(0);
 stp('sl2',SL2,5); sl3Draw(false); svShow(); spShow();
 stp('sy',SY,5); stpNext('sy'); stp('sb',SB,2); stpNext('sb'); stp('sf',SF,3); stpNext('sf'); slP(0);
 
