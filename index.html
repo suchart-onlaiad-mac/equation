@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สมการง่ายนิดเดียว</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700;800&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pink:#ff6ec7; --purple:#a06bff; --blue:#4ea8ff; --cyan:#37e0d8;
+    --green:#5bd75b; --yellow:#ffd34e; --orange:#ff9d42; --red:#ff6b6b;
+    --ink:#34306b; --soft:#fff;
+    --shadow:0 10px 30px rgba(80,60,160,.18);
+    --shadow-sm:0 4px 14px rgba(80,60,160,.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Kanit','Sarabun',sans-serif;
+    color:var(--ink);
+    background:linear-gradient(135deg,#ffe1f4 0%,#e3ecff 45%,#dffaf6 100%);
+    background-attachment:fixed;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  /* floating bubbles bg */
+  .bubbles{position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none}
+  .bubbles span{position:absolute; bottom:-80px; border-radius:50%; opacity:.35;
+    animation:rise linear infinite}
+  @keyframes rise{to{transform:translateY(-115vh) rotate(360deg)}}
+  .wrap{position:relative; z-index:1; max-width:920px; margin:0 auto; padding:18px 16px 60px}
+
+  /* ---- Header ---- */
+  header{text-align:center; padding:14px 0 6px}
+  .title{
+    font-weight:800; font-size:clamp(26px,6vw,46px); line-height:1.05;
+    background:linear-gradient(90deg,var(--pink),var(--purple),var(--blue),var(--cyan));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    filter:drop-shadow(0 3px 0 rgba(255,255,255,.6));
+  }
+  .subtitle{font-size:15px; color:#6a64a6; margin-top:4px; font-weight:500}
+  .mascot{font-size:clamp(48px,11vw,74px); display:inline-block; animation:bob 2.6s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-12px) rotate(4deg)}}
+
+  /* ---- Star bar ---- */
+  .starbar{display:flex; align-items:center; justify-content:center; gap:8px; margin:10px auto 0;
+    background:#fff; border-radius:50px; padding:8px 18px; box-shadow:var(--shadow-sm); width:max-content; font-weight:600}
+  .starbar b{color:var(--orange); font-size:20px}
+
+  /* ---- Home menu cards ---- */
+  .menu{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:16px; margin-top:22px}
+  .card{
+    border:none; cursor:pointer; border-radius:24px; padding:22px 16px; text-align:center;
+    color:#fff; font-family:inherit; font-weight:700; font-size:17px; position:relative;
+    box-shadow:var(--shadow); transition:transform .15s, box-shadow .15s; overflow:hidden;
+  }
+  .card:hover{transform:translateY(-6px) scale(1.02); box-shadow:0 16px 36px rgba(80,60,160,.28)}
+  .card:active{transform:scale(.97)}
+  .card .ico{font-size:42px; display:block; margin-bottom:8px; filter:drop-shadow(0 3px 4px rgba(0,0,0,.15))}
+  .card small{display:block; font-weight:500; font-size:12.5px; opacity:.92; margin-top:4px}
+  .c1{background:linear-gradient(140deg,#ff8fd4,#ff5fb0)}
+  .c2{background:linear-gradient(140deg,#9b8bff,#7a5cff)}
+  .c3{background:linear-gradient(140deg,#5fb8ff,#3d86ff)}
+  .c4{background:linear-gradient(140deg,#42e0c8,#1bc2b0)}
+  .c5{background:linear-gradient(140deg,#ffc04e,#ff9326)}
+  .c6{background:linear-gradient(140deg,#76dd6e,#39c14a)}
+
+  /* ---- Screens ---- */
+  .screen{display:none; animation:pop .35s ease}
+  .screen.active{display:block}
+  @keyframes pop{from{opacity:0; transform:translateY(18px) scale(.98)}to{opacity:1; transform:none}}
+  .panel{background:#fff; border-radius:26px; padding:24px 22px; box-shadow:var(--shadow); margin-top:18px}
+  .panel h2{font-size:clamp(20px,4.5vw,28px); display:flex; align-items:center; gap:10px; margin-bottom:6px}
+  .panel .lead{color:#6a64a6; font-size:15px; line-height:1.6; margin-bottom:16px}
+
+  .backbtn{border:none; cursor:pointer; font-family:inherit; font-weight:700; font-size:15px;
+    background:#fff; color:var(--purple); border-radius:50px; padding:10px 20px; box-shadow:var(--shadow-sm);
+    display:inline-flex; align-items:center; gap:7px; transition:transform .12s}
+  .backbtn:hover{transform:translateX(-4px)}
+
+  /* ---- 100 grid ---- */
+  .grid100{display:grid; grid-template-columns:repeat(10,1fr); gap:4px; max-width:340px; margin:14px auto;
+    background:#f0eefc; padding:10px; border-radius:18px}
+  .cell{aspect-ratio:1; background:#fff; border-radius:6px; cursor:pointer; transition:.12s; box-shadow:inset 0 0 0 1px #e6e2fb}
+  .cell.on{background:linear-gradient(140deg,var(--pink),var(--purple)); box-shadow:none; transform:scale(1.04)}
+  .bigpct{text-align:center; font-size:clamp(38px,9vw,64px); font-weight:800;
+    background:linear-gradient(90deg,var(--pink),var(--purple)); -webkit-background-clip:text; background-clip:text; color:transparent; margin:6px 0}
+  .hint{text-align:center; color:#6a64a6; font-size:14px; margin-top:6px}
+
+  /* ---- Sliders & inputs ---- */
+  .row{display:flex; flex-wrap:wrap; gap:14px; align-items:center; justify-content:center; margin:14px 0}
+  input[type=range]{-webkit-appearance:none; appearance:none; width:min(320px,80%); height:14px; border-radius:50px;
+    background:linear-gradient(90deg,var(--cyan),var(--purple)); outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:30px; height:30px; border-radius:50%;
+    background:#fff; border:4px solid var(--purple); cursor:pointer; box-shadow:0 3px 8px rgba(0,0,0,.2)}
+  input[type=range]::-moz-range-thumb{width:30px; height:30px; border-radius:50%; background:#fff; border:4px solid var(--purple); cursor:pointer}
+  .field{display:flex; flex-direction:column; gap:4px; align-items:center}
+  .field label{font-weight:600; font-size:14px; color:#6a64a6}
+  .num{width:130px; font-family:inherit; font-weight:700; font-size:22px; text-align:center; color:var(--ink);
+    border:3px solid #e6e2fb; border-radius:16px; padding:10px; outline:none; transition:.15s; background:#faf9ff}
+  .num:focus{border-color:var(--purple); background:#fff}
+
+  /* ---- Convert visual ---- */
+  .conv{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; text-align:center; margin-top:8px}
+  .conv .box{background:#faf9ff; border-radius:18px; padding:16px 10px; border:3px solid #eee9fc}
+  .conv .box .t{font-size:12px; color:#9a93c9; font-weight:600}
+  .conv .box .v{font-size:clamp(20px,5vw,30px); font-weight:800; margin-top:4px}
+  .conv .b1 .v{color:var(--pink)} .conv .b2 .v{color:var(--purple)} .conv .b3 .v{color:var(--blue)}
+  svg.pie{display:block; margin:8px auto; filter:drop-shadow(0 6px 10px rgba(120,90,200,.25))}
+
+  /* ---- Steps box ---- */
+  .steps{background:linear-gradient(135deg,#fff7fc,#f2f6ff); border-radius:18px; padding:16px 18px; margin-top:14px;
+    border:2px dashed #d9cffb}
+  .steps .st{display:flex; gap:10px; align-items:flex-start; padding:7px 0; font-size:15px; line-height:1.5}
+  .steps .st b{min-width:26px; height:26px; border-radius:50%; background:var(--purple); color:#fff;
+    display:inline-grid; place-items:center; font-size:13px; flex:none}
+  .answer{text-align:center; font-size:clamp(26px,7vw,40px); font-weight:800; margin-top:10px;
+    background:linear-gradient(90deg,var(--green),var(--cyan)); -webkit-background-clip:text; background-clip:text; color:transparent}
+
+  /* ---- progress bar (for X% of N) ---- */
+  .bar{height:42px; background:#f0eefc; border-radius:50px; overflow:hidden; margin:14px 0; position:relative}
+  .bar .fill{height:100%; width:0; border-radius:50px; background:linear-gradient(90deg,var(--orange),var(--pink));
+    transition:width .6s cubic-bezier(.3,1.3,.5,1); display:flex; align-items:center; justify-content:flex-end;
+    padding-right:14px; color:#fff; font-weight:700}
+
+  /* ---- buttons ---- */
+  .btn{border:none; cursor:pointer; font-family:inherit; font-weight:700; font-size:16px; color:#fff;
+    border-radius:50px; padding:12px 26px; box-shadow:var(--shadow-sm); transition:transform .12s, filter .12s}
+  .btn:hover{transform:translateY(-2px); filter:brightness(1.05)} .btn:active{transform:scale(.96)}
+  .btn.go{background:linear-gradient(135deg,var(--purple),var(--blue))}
+  .btn.alt{background:linear-gradient(135deg,var(--orange),var(--pink))}
+  .center{text-align:center}
+
+  /* ---- real world tabs ---- */
+  .tabs{display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:10px}
+  .tab{border:none; cursor:pointer; font-family:inherit; font-weight:600; font-size:14px; color:var(--purple);
+    background:#f0eefc; border-radius:50px; padding:9px 18px; transition:.15s}
+  .tab.on{background:linear-gradient(135deg,var(--purple),var(--blue)); color:#fff; box-shadow:var(--shadow-sm)}
+  .tool{display:none} .tool.on{display:block; animation:pop .3s ease}
+  .result-card{background:linear-gradient(135deg,#eafff3,#e7f6ff); border-radius:18px; padding:16px; margin-top:12px; text-align:center}
+  .result-card .big{font-size:clamp(24px,6vw,38px); font-weight:800; color:var(--green)}
+  .result-card .small{font-size:14px; color:#6a8; font-weight:600}
+  .priceline{font-size:15px; color:#6a64a6; margin-top:4px}
+  .priceline del{color:#c0b8e0}
+
+  /* ---- Quiz ---- */
+  .levelpick{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:16px 0}
+  .lvl{border:none; cursor:pointer; font-family:inherit; font-weight:700; font-size:16px; color:#fff;
+    border-radius:20px; padding:18px 22px; box-shadow:var(--shadow-sm); transition:transform .14s; flex:1; min-width:120px; max-width:200px}
+  .lvl:hover{transform:translateY(-4px)} .lvl small{display:block; font-weight:500; font-size:12px; opacity:.92; margin-top:4px}
+  .lvl.e{background:linear-gradient(140deg,#76dd6e,#39c14a)}
+  .lvl.m{background:linear-gradient(140deg,#ffc04e,#ff9326)}
+  .lvl.h{background:linear-gradient(140deg,#ff8f8f,#ff5f5f)}
+
+  .qhead{display:flex; justify-content:space-between; align-items:center; font-weight:700; color:#6a64a6; margin-bottom:6px; font-size:14px}
+  .qprog{height:10px; background:#f0eefc; border-radius:50px; overflow:hidden; margin-bottom:14px}
+  .qprog i{display:block; height:100%; background:linear-gradient(90deg,var(--cyan),var(--purple)); transition:width .3s}
+  .question{font-size:clamp(20px,5vw,28px); font-weight:700; text-align:center; margin:10px 0 18px; line-height:1.4}
+  .choices{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+  .choice{border:3px solid #e6e2fb; background:#faf9ff; cursor:pointer; font-family:inherit; font-weight:700;
+    font-size:22px; color:var(--ink); border-radius:18px; padding:18px; transition:.12s}
+  .choice:hover{border-color:var(--purple); transform:translateY(-2px)}
+  .choice.correct{background:linear-gradient(135deg,#5bd75b,#37e0d8); color:#fff; border-color:transparent; animation:pulse .4s}
+  .choice.wrong{background:linear-gradient(135deg,#ff8f8f,#ff5f5f); color:#fff; border-color:transparent; animation:shake .4s}
+  .choice:disabled{cursor:default}
+  @keyframes pulse{50%{transform:scale(1.08)}}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+  .feedback{text-align:center; font-size:20px; font-weight:700; margin-top:16px; min-height:30px}
+  .scorebig{text-align:center; padding:10px}
+  .scorebig .stars{font-size:54px; letter-spacing:6px}
+  .scorebig .msg{font-size:clamp(22px,5vw,30px); font-weight:800; margin:10px 0;
+    background:linear-gradient(90deg,var(--pink),var(--purple)); -webkit-background-clip:text; background-clip:text; color:transparent}
+  .scorebig .detail{color:#6a64a6; font-size:16px}
+
+  /* confetti */
+  .confetti{position:fixed; top:-10px; width:10px; height:16px; z-index:99; pointer-events:none; border-radius:2px}
+  @keyframes fall{to{transform:translateY(105vh) rotate(720deg); opacity:0}}
+
+  footer{text-align:center; color:#9a93c9; font-size:12.5px; margin-top:30px; line-height:1.7}
+
+  /* ---- (IT) locked cards ---- */
+  .card.locked{filter:grayscale(.75) brightness(1.05); opacity:.6; cursor:not-allowed}
+  .card.locked:hover{transform:none; box-shadow:var(--shadow)}
+  @media (max-width:600px){
+    .menu{grid-template-columns:1fr 1fr; gap:12px}
+    .card{padding:16px 10px; font-size:15px}
+    .card .ico{font-size:34px}
+    .panel{padding:18px 12px}
+    .layer{padding:14px 12px}
+    table.t{font-size:13px}
+    table.t th,table.t td{padding:7px 5px}
+  }
+  .card .tag{position:absolute; top:10px; right:12px; font-size:11px; background:rgba(255,255,255,.3); border-radius:50px; padding:2px 9px}
+  .c7{background:linear-gradient(140deg,#ff8f8f,#ff5f5f)}
+  .c8{background:linear-gradient(140deg,#7fd3ff,#4f8dff)}
+  /* ---- (IT) ด่านพิเศษ Office ---- */
+  .cgold{background:linear-gradient(140deg,#ffa62b,#e86a00)}
+  .special{margin-top:26px; border-radius:24px; padding:16px 14px 18px; background:linear-gradient(140deg,#fff8e0,#ffeab8); border:3px dashed #ffb400; text-align:center}
+  .special .sp-h{font-family:'Pridi',serif; font-size:21px; font-weight:700; color:#b86e00}
+  .special .sp-tag{display:inline-block; font-size:12px; font-weight:600; background:#ff5f5f; color:#fff; border-radius:50px; padding:2px 10px; margin-left:6px; vertical-align:middle}
+  .special .tip{margin:6px 0 12px}
+  .special .card{width:100%; max-width:360px; margin:0 auto}
+  .path{display:flex; flex-wrap:wrap; justify-content:center; gap:6px; margin:6px 0 4px}
+  .path span{background:#fff; border-radius:50px; padding:3px 11px; font-size:13px; font-weight:600; color:#6a64a6}
+
+  /* ---- (IT) 3 layers ---- */
+  .layer{border-radius:22px; padding:18px 18px; margin-top:16px; animation:pop .35s ease}
+  .layer h3{font-size:clamp(18px,4vw,23px); display:flex; align-items:center; gap:8px; margin-bottom:8px}
+  .layer p{font-size:16px; line-height:1.7}
+  .L1{background:linear-gradient(135deg,#eafff0,#e6fbff); border:3px solid #bdf0cc}
+  .L2{background:linear-gradient(135deg,#fffbe6,#fff0e0); border:3px solid #ffe2a8}
+  .L3{background:linear-gradient(135deg,#f3edff,#ffeaf6); border:3px solid #dccfff}
+  .more{display:block; width:100%; margin-top:14px; border:3px dashed #c9bdf5; background:#fff; cursor:pointer;
+    font-family:inherit; font-weight:700; font-size:16px; color:var(--purple); border-radius:18px; padding:14px; transition:.15s}
+  .more:hover{background:#faf7ff; transform:translateY(-2px)}
+  .hide{display:none}
+
+  /* phone ↔ computer compare cards */
+  .cmp{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin-top:10px}
+  .cmp .it{background:#fff; border-radius:18px; padding:14px; box-shadow:var(--shadow-sm); text-align:center}
+  .cmp .it .e{font-size:40px}
+  .cmp .it b{display:block; font-size:17px; margin-top:4px}
+  .cmp .it span{display:block; font-size:14px; color:#6a64a6; margin-top:4px; line-height:1.5}
+  .cmp .it span b{display:inline; font-size:inherit; margin:0; color:var(--ink)}
+  .cmp .it span .kw{display:inline; font-size:inherit; margin:0; color:#6b3fd6; line-height:inherit}
+  .cmp .it .pill{display:inline-block; margin-top:8px; font-size:12.5px; font-weight:600; color:#fff; border-radius:50px; padding:3px 12px}
+  .p-in{background:var(--blue)} .p-pr{background:var(--pink)} .p-st{background:var(--orange)} .p-out{background:var(--green)}
+
+  /* flow IPO */
+  .flow{display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:8px; margin:12px 0}
+  .flow .f{border-radius:16px; padding:10px 14px; color:#fff; font-weight:700; text-align:center; min-width:96px}
+  .flow .f small{display:block; font-weight:500; font-size:12px}
+  .flow .ar{font-size:22px; color:#a99fe0}
+
+  /* memo / exam tip */
+  .memo{background:#fff; border-left:6px solid var(--orange); border-radius:14px; padding:12px 14px; margin-top:12px; font-size:15px; line-height:1.6}
+  .memo.ex{border-left-color:var(--red)}
+  .tw{overflow-x:auto; margin-top:10px; border-radius:14px}
+  .tw table.t{margin-top:0}
+  table.t{width:100%; border-collapse:separate; border-spacing:0; margin-top:10px; font-size:14.5px; background:#fff; border-radius:14px; overflow:hidden}
+  table.t th{background:#efe9ff; color:#5a4bb0; padding:9px 8px; text-align:left}
+  table.t td{padding:9px 8px; border-top:1px solid #f1eefc; vertical-align:top; line-height:1.5}
+
+  /* ---- (IT) level map ---- */
+  .levels{display:grid; gap:12px; margin-top:12px}
+  .lv{display:flex; align-items:center; gap:14px; border:none; cursor:pointer; font-family:inherit; text-align:left;
+    border-radius:20px; padding:14px 16px; color:#fff; box-shadow:var(--shadow-sm); transition:transform .14s}
+  .lv:hover{transform:translateY(-3px)}
+  .lv .n{font-size:38px}
+  .lv b{font-size:17px; display:block} .lv small{font-size:13px; opacity:.95}
+  .lv .st{margin-left:auto; font-size:20px; letter-spacing:2px; white-space:nowrap}
+  .lv.locked{background:#cfcbe6 !important; cursor:not-allowed} .lv.locked:hover{transform:none}
+  .hearts{font-size:18px; letter-spacing:2px}
+  .btn.fire{background:linear-gradient(135deg,#ff5f3c,#ffb020)}
+  #ch-retry{position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:50; display:none;
+    box-shadow:0 6px 18px rgba(0,0,0,.25); max-width:calc(100vw - 32px)}
+  .lv .bd{font-size:15px; margin-left:4px}
+  .choices.txt{grid-template-columns:1fr}
+  .choices.txt .choice{font-size:17px; text-align:left; padding:14px 16px; line-height:1.45}
+  .why{background:#f7f5ff; border-radius:14px; padding:12px 14px; margin-top:12px; font-size:15px; line-height:1.6; display:none}
+  .nextbtn{margin-top:12px; display:none}
+
+  /* ---- (IT) hardware tour ---- */
+  .step-h{display:flex; align-items:center; gap:8px; font-size:clamp(17px,4vw,21px); font-weight:700; margin:22px 0 4px}
+  .step-h .sn{width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,var(--pink),var(--purple)); color:#fff;
+    display:inline-grid; place-items:center; font-size:15px; flex:none}
+  .tip{font-size:14.5px; color:#6a64a6; line-height:1.6; margin-bottom:8px}
+  .fig{background:#fff; border-radius:20px; padding:8px; box-shadow:var(--shadow-sm); margin-top:8px}
+  .hsvg{display:block; width:100%; max-width:440px; margin:0 auto; height:auto}
+  .hsvg .bd{cursor:pointer}
+  .hsvg .bd circle{fill:#ff6ec7; stroke:#fff; stroke-width:2.5; transition:.15s}
+  .hsvg .bd text{fill:#fff; font-size:12px; font-weight:800; text-anchor:middle; font-family:'Kanit',sans-serif; pointer-events:none}
+  .hsvg .bd:hover circle{fill:#a06bff}
+  .hsvg .bd.sel circle{fill:#ffd34e; stroke:#ff6ec7; r:12}
+  .hsvg .bd.sel text{fill:var(--ink)}
+  .hsvg .pt{cursor:pointer; transition:.15s}
+  .hsvg .pppush{animation:ppPush .7s ease-out}
+  .hsvg .ppfly{animation:ppFly .6s ease-out}
+  @keyframes ppPush{from{transform:translateX(240px)}to{transform:none}}
+  @keyframes ppFly{from{transform:translateY(26px);opacity:0}to{transform:none;opacity:1}}
+  .hsvg .pt.sel{filter:drop-shadow(0 0 4px #ffd34e) drop-shadow(0 0 7px #ff6ec7)}
+  .hsvg .bd circle{animation:beat 2.2s ease-in-out infinite}
+  @keyframes beat{50%{stroke-width:5}}
+  .chips{display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-top:10px}
+  .chip{border:2px solid #e6e2fb; background:#fff; cursor:pointer; font-family:inherit; font-size:13.5px; font-weight:600;
+    color:var(--ink); border-radius:50px; padding:5px 12px; transition:.12s}
+  .chip.sel{background:linear-gradient(135deg,var(--yellow),var(--orange)); border-color:transparent}
+  .info{background:#fff; border-radius:16px; padding:12px 14px; margin-top:10px; font-size:15.5px; line-height:1.6; min-height:52px;
+    border:3px solid #ffe2a8; text-align:center}
+  .info .deep{text-align:left; margin-top:8px; border-top:1.5px dashed #d9d2f2; padding-top:8px}
+  .info .dbtn{border:none; cursor:pointer; font-family:inherit; font-weight:700; font-size:14.5px; color:#6b3fd6;
+    background:#efe8ff; border-radius:50px; padding:6px 14px; margin-top:6px}
+  .info .d2{background:#f7f3ff; border-radius:12px; padding:8px 10px}
+  .info .d3{margin:8px 0 4px 18px; padding:0} .info .d3 li{margin:3px 0}
+  .info .dlink{display:inline-block; margin-top:4px; font-size:14px; color:#2a6fd6; word-break:break-word}
+  .kw{color:#6b3fd6; border-bottom:2px dotted #a98bf0; cursor:pointer; font-weight:700}
+  .info .gp{font-style:normal; color:#fff; font-size:12.5px; font-weight:600; border-radius:50px; padding:2px 10px; margin-left:4px; white-space:nowrap}
+  .map{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-top:8px}
+  .grp{border-radius:18px; padding:12px; color:#fff}
+  .grp h4{font-size:16px} .grp h4 small{font-weight:500; font-size:11.5px; opacity:.9}
+  .grp p{font-size:12.5px; opacity:.95; margin:2px 0 8px}
+  .grp .ch{display:inline-block; background:rgba(255,255,255,.92); color:var(--ink); border-radius:50px; padding:3px 10px; margin:0 4px 5px 0; font-size:13px; font-weight:600}
+  .grp .ch small{font-weight:500; color:#6a64a6}
+  .g-in{background:linear-gradient(140deg,#5fb8ff,#3d86ff)} .g-pr{background:linear-gradient(140deg,#ff8fd4,#ff5fb0)}
+  .g-st{background:linear-gradient(140deg,#ffc04e,#ff9326)} .g-out{background:linear-gradient(140deg,#76dd6e,#39c14a)}
+  .g-ax{background:linear-gradient(140deg,#9b8bff,#7a5cff); grid-column:1/-1}
+  .hsvg .offtag{display:none}
+  .hsvg.off .offtag{display:inline; animation:pop .35s ease}
+  .hsvg.off [data-k=ram] rect{fill:#d6d3e6 !important}
+  .hsvg.off [data-k=cpu]{opacity:.55}
+  .xinfo{text-align:left; margin-top:8px}
+  .cmp1{display:flex; gap:10px; align-items:flex-start; background:#faf8ff; border-radius:12px; padding:8px 10px; margin-top:6px; font-size:14.5px; line-height:1.55}
+  .cmp1 .e{font-size:24px; flex:none}
+  .qpic{text-align:center; font-size:64px; line-height:1; margin-top:6px}
+  .hsvg .hit{fill:transparent; cursor:pointer; transition:.15s}
+  .hsvg .hit:hover{fill:#ffd34e22}
+  .hsvg .hit.sel{fill:#ffd34e40; stroke:#ff6ec7; stroke-width:2}
+  .hsvg .hit.ok{fill:#39c14a40; stroke:#39c14a; stroke-width:2.5}
+  .hsvg .hit.bad{fill:#ff5f5f40; stroke:#ff5f5f; stroke-width:2.5}
+  .qpic .hsvg{max-width:440px; margin-top:6px}
+  .hsvg.kbd{max-width:600px}
+  .kbdw{overflow-x:auto; -webkit-overflow-scrolling:touch}
+  .kbdw .hsvg.kbd{min-width:520px}
+  .kbdw-hint{display:none; text-align:center; font-size:12.5px; color:#8a84a8; margin-top:2px}
+  @media (max-width:600px){ .kbdw-hint{display:block} }
+  .hsvg.kbd .hit.sel{fill:#ffb13bb0; stroke:#ff6ec7; stroke-width:1.5}
+  .hsvg.kbd .hit.ok{fill:#39c14a90} .hsvg.kbd .hit.bad{fill:#ff5f5f90}
+
+  /* ---- (IT) data units ---- */
+  .bulbs{display:grid; grid-template-columns:repeat(8,1fr); gap:6px; max-width:440px; margin:6px auto 0}
+  .bulb{border:none; cursor:pointer; font-family:inherit; border-radius:14px; padding:6px 0; background:#eceaf6; color:#9a93c9;
+    font-weight:800; font-size:18px; transition:.15s}
+  .bulb .e{display:block; font-size:24px; filter:grayscale(1); opacity:.45}
+  .bulb.on{background:linear-gradient(140deg,#fff3b0,#ffd34e); color:var(--ink); box-shadow:0 0 14px rgba(255,211,78,.85)}
+  .bulb.on .e{filter:none; opacity:1}
+  .bulb small{display:block; font-size:11px; font-weight:600}
+  .pv .bulb{cursor:default}
+  .byteout{display:grid; grid-template-columns:repeat(auto-fit,minmax(110px,1fr)); gap:8px; margin-top:10px; text-align:center}
+  .byteout div{background:#faf9ff; border-radius:14px; padding:8px 4px; box-shadow:inset 0 0 0 2px #eee9fc}
+  .byteout small{display:block; font-size:12px; color:#9a93c9; font-weight:600}
+  .byteout b{font-size:clamp(18px,5vw,26px); letter-spacing:1px}
+  .ladder{max-width:520px; margin:8px auto 0}
+  .rung{display:flex; align-items:center; gap:10px; border-radius:16px; padding:9px 12px; color:#fff}
+  .rung .u{font-weight:800; font-size:18px; min-width:64px; line-height:1.15}
+  .rung .u small{display:block; font-size:11.5px; font-weight:500; opacity:.92}
+  .rung .ex{font-size:14px; line-height:1.45; flex:1; min-width:0}
+  .rung .e{font-size:24px; flex:none}
+  .ladder .step{text-align:center; font-weight:800; color:var(--purple); font-size:14px; padding:2px 0}
+
+  /* ---- (IT) software ---- */
+  .stack{display:grid; gap:6px; max-width:460px; margin:8px auto 0}
+  .lay{display:flex; align-items:center; gap:12px; border-radius:16px; padding:10px 14px; background:#f0eefc; font-weight:700;
+    font-size:15.5px; line-height:1.35; border:3px solid transparent; border-left:8px solid var(--lc,#c9c3e8); transition:.2s}
+  .lay .e{font-size:28px; flex:none}
+  .lay small{display:block; font-weight:500; font-size:12.5px; color:#6a64a6}
+  .lay.lost{opacity:.6}
+  .lay.on{background:linear-gradient(135deg,#fff3b0,#ffd34e); border-color:#ff9d42; transform:scale(1.03); box-shadow:var(--shadow-sm)}
+  @media (max-width:420px){
+    .bulbs{grid-template-columns:repeat(4,1fr)}
+    .rung{flex-wrap:wrap; row-gap:2px}
+    .rung .e{order:-1}
+    .rung .u{display:flex; align-items:baseline; gap:6px}
+    .rung .ex{flex-basis:100%}
+  }
+
+  /* ---- (EQ) บรรทัดคณิต + เหตุผล · ตาชั่ง ---- */
+  .story{background:#fff8e8; border-radius:18px; padding:14px; text-align:center; font-size:16.5px; line-height:1.7; margin-top:8px}
+  .story .pic{font-size:40px; letter-spacing:4px}
+  .story .ask{font-weight:800; font-size:19px; color:var(--purple)}
+  .lines{display:grid; gap:6px; margin-top:8px}
+  .ln{display:flex; flex-wrap:wrap; gap:2px 12px; align-items:baseline; background:#faf9ff; border-radius:12px; padding:8px 12px; border-left:5px solid #c9bdf5; animation:pop .35s ease}
+  .ln .m{font-weight:800; font-size:19px; overflow-wrap:anywhere}
+  .ln .r{font-size:14.5px; color:#6a64a6; line-height:1.5}
+  .ln.bad{background:#fff0f0; border-left-color:#ff5f5f} .ln.ok{background:#eafff0; border-left-color:#39c14a}
+  .eqmap{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:8px; text-align:center}
+  .eqmap div{background:#fff; border-radius:14px; padding:8px; box-shadow:var(--shadow-sm)}
+  .eqmap .w{display:block; font-size:13.5px; color:#6a64a6} .eqmap b{font-size:21px}
+  .bigeq{text-align:center; font-size:clamp(26px,7vw,38px); font-weight:800; margin:12px 0; color:var(--purple)}
+  .bsvg{display:block; width:100%; max-width:440px; margin:0 auto; height:auto}
+  .bsvg .beam,.bsvg .pan{transition:transform .55s cubic-bezier(.3,1.4,.5,1)}
+  .eqline{text-align:center; font-size:24px; font-weight:800; margin-top:6px}
+  .ops{display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-top:8px}
+  .hist{background:#fdf6e9; border-left:6px solid #c58a2b; border-radius:14px; padding:12px 14px; margin-top:12px; font-size:15px; line-height:1.65}
+  .flash{animation:flash 1.8s ease}
+  @keyframes flash{0%,60%{background:#fff3b0; box-shadow:0 0 0 6px #fff3b0}100%{background:transparent; box-shadow:none}}
+  .stuck{margin-top:10px}
+  footer a{color:#7a5cff}
+  @media (max-width:600px){ .eqmap{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<div class="bubbles" id="bubbles"></div>
+<div class="wrap">
+
+  <!-- ================= HOME ================= -->
+  <header>
+    <div class="mascot" id="mascot">⚖️</div>
+    <div class="title">สมการง่ายนิดเดียว</div>
+    <div class="subtitle">คิดเลขชีวิตจริงทีละขั้น ไม่ต้องท่องสูตร 🧺</div>
+    <div class="starbar">⭐ ดาวสะสม: <b id="totalStars">0</b></div>
+  </header>
+
+  <div class="screen active" id="home">
+    <div class="menu">
+      <button class="card c1" onclick="go('c0')"><span class="ico">🚪</span>ลองเดาก่อน<small>โจทย์ซื้อของ ลองคิดดู</small></button>
+      <button class="card c2" onclick="go('bal')"><span class="ico">⚖️</span>ตาชั่ง<small>หัวใจของสมการ</small></button>
+      <button class="card c3 locked" disabled><span class="tag">เร็ว ๆ นี้</span><span class="ico">🍕</span>แบ่งของ<small>เศษส่วน · ร้อยละ</small></button>
+      <button class="card c4 locked" disabled><span class="tag">เร็ว ๆ นี้</span><span class="ico">📦</span>กล่องปิด<small>ตัวแปร = ของที่ยังไม่รู้</small></button>
+      <button class="card c5 locked" disabled><span class="tag">เร็ว ๆ นี้</span><span class="ico">🔓</span>แก้สมการ<small>ทีละบรรทัด มีเหตุผล</small></button>
+      <button class="card c6 locked" disabled><span class="tag">เร็ว ๆ นี้</span><span class="ico">💰</span>ดอกเบี้ย<small>เงินฝาก · เงินกู้ นับวัน</small></button>
+      <button class="card c7 locked" disabled><span class="tag">เร็ว ๆ นี้</span><span class="ico">🧺</span>ไม่รู้ 2 อย่าง<small>สมการ 2 ตัวแปร</small></button>
+      <button class="card c8" onclick="openGame()"><span class="ico">🎮</span>เกมพิชิตด่าน<small>ตอบถูก ปลดล็อกด่าน!</small></button>
+    </div>
+    <p class="hint" style="margin-top:16px">💡 ทุกบทมี 3 ชั้น: 🌱 อ่านแค่ชั้นแรกก็เข้าใจ · อยากรู้มากขึ้นค่อยกดต่อ 🌿 🌳<br>เรียนตามลำดับ บนลงล่าง · ตอบผิดได้ ไม่เป็นไร เกมจะบอกว่าติดตรงไหน แล้วพากลับไปดู 🙂</p>
+  </div>
+
+  <!-- ================= CH 0 · ลองเดาก่อน ================= -->
+  <div class="screen" id="c0">
+    <button class="backbtn" onclick="home()">⬅️ กลับหน้าหลัก</button>
+    <div class="panel">
+      <h2>🚪 ลองเดาก่อน</h2>
+
+      <div class="layer L1">
+        <h3>🌱 ชั้นเมล็ด · รู้แค่นี้ก็เข้าใจ</h3>
+        <p>ยังไม่ต้องรู้จักคำว่า "สมการ" · เริ่มจากโจทย์ที่เจอที่ตลาดกันเลย 🛒</p>
+
+        <div class="step-h" id="c0-s1"><span class="sn">1</span> 🤔 ลองเดาดู</div>
+        <div class="story">
+          <div class="pic">🌶️🌶️🌶️</div>
+          <p>ซื้อ<b>ต้นกล้าพริก 3 ถาด</b> ราคาถาดละเท่ากัน<br>ให้แม่ค้าไป <b>แบงก์ 100</b> · ได้เงินทอน <b>10 บาท</b></p>
+          <p class="ask">ถาดละกี่บาท?</p>
+        </div>
+        <div class="row">
+          <input class="num" id="g0" type="number" inputmode="numeric" placeholder="?" onkeydown="if(event.key==='Enter')guess0()">
+          <button class="btn go" onclick="guess0()">ตอบ</button>
+        </div>
+        <div class="info" id="g0fb">พิมพ์ตัวเลขที่เดา แล้วกด "ตอบ" · เดาผิดไม่เป็นไร จะบอกว่าผิดเพราะอะไร</div>
+
+        <div class="step-h" id="c0-s2"><span class="sn">2</span> 🔙 คิดย้อนทีละขั้น</div>
+        <p class="tip">ไม่ต้องเดา · เริ่มจากสิ่งที่รู้ แล้วย้อนกลับไปหาสิ่งที่ไม่รู้ · แต่ละบรรทัดมี<b>เหตุผล</b>กำกับ 👇</p>
+        <div class="lines" id="back0"></div>
+        <div class="center" style="margin-top:8px"><button class="btn alt" id="back0b" onclick="back0()">👉 ดูขั้นต่อไป</button></div>
+
+        <div class="step-h" id="c0-s3"><span class="sn">3</span> ✏️ เขียนให้สั้นลง</div>
+        <p class="tip">แบงก์ 100 ที่ให้ไป แบ่งเป็น 2 ก้อน: <b>ก้อนที่จ่ายค่าต้นกล้า + ก้อนที่ได้ทอนคืน = 100</b> · ข้อ 2 เราคิดย้อนจาก 100 จึง<b>ลบ</b>เงินทอนออก · ตอนเขียนไปข้างหน้า จึงเป็นการ<b>บวก</b> · ใช้ <b>กล่อง ▢</b> แทนราคาที่ยังไม่รู้</p>
+        <div class="eqmap">
+          <div><span class="w">3 ถาด ถาดละ ▢ บาท</span><b>3 × ▢</b></div>
+          <div><span class="w">บวกเงินทอน 10 บาท</span><b>+ 10</b></div>
+          <div><span class="w">เท่ากับเงินที่ให้ไป</span><b>= 100</b></div>
+        </div>
+        <div class="bigeq">3 × ▢ + 10 = 100</div>
+        <div class="memo">🔑 <b>บรรทัดนี้แหละ เรียกว่า "สมการ"</b> · คือประโยคที่บอกว่า <b>ของสองข้างเท่ากัน</b> (มีเครื่องหมาย = อยู่ตรงกลาง) · ส่วน ▢ คือของที่เรายังไม่รู้ และอยากหา</div>
+
+        <div class="step-h"><span class="sn">4</span> 🗺️ เส้นทางของเรา</div>
+        <p class="tip">เครื่องมือแต่ละชิ้นเกิดขึ้นเพราะ<b>ชิ้นก่อนหน้าแก้โจทย์บางอย่างไม่ได้</b> · เราจะเดินทีละก้าว ไม่ข้ามขั้น</p>
+        <div class="path">
+          <span>🚪 ลองเดา</span><span>➜</span><span>⚖️ ตาชั่ง</span><span>➜</span><span>🍕 แบ่งของ</span><span>➜</span><span>📦 กล่องปิด</span><span>➜</span><span>🔓 แก้สมการ</span><span>➜</span><span>💰 ดอกเบี้ย</span><span>➜</span><span>🧺 ไม่รู้ 2 อย่าง</span>
+        </div>
+        <button class="more" onclick="openLayer('c0L2',this)">🌿 อยากรู้อีกนิด · ลองคิดย้อนเอง ⬇️</button>
+      </div>
+
+      <div class="layer L2 hide" id="c0L2">
+        <h3>🌿 ชั้นต้นกล้า · ลองคิดย้อนเอง</h3>
+        <p class="tip">คราวนี้ผู้ช่วยจะ<b>ช่วยน้อยลงทีละข้อ</b> · ข้อแรกมีบรรทัดแรกให้แล้ว · ข้อสองเริ่มเองทั้งหมด</p>
+        <div class="tabs" id="t2tabs">
+          <button class="tab on" onclick="drill(0,this)">📱 บิลค่าโทร</button>
+          <button class="tab" onclick="drill(1,this)">🥬 แปลงผัก</button>
+        </div>
+        <div class="story" id="drillStory"></div>
+        <div class="lines" id="drillLines"></div>
+        <div class="row" id="drillIn"></div>
+        <div class="info" id="drillFb"></div>
+        <div class="memo">🔁 <b>คิดย้อน = ทำกลับด้าน</b> · โจทย์<b>บวก</b>มา เราย้อนด้วยการ<b>ลบ</b> · โจทย์<b>คูณ</b>มา เราย้อนด้วยการ<b>หาร</b></div>
+        <button class="more" onclick="openLayer('c0L3',this)">🌳 เจาะลึก · ถ้าเดา จะเดาให้ฉลาดยังไง ⬇️</button>
+      </div>
+
+      <div class="layer L3 hide" id="c0L3">
+        <h3>🌳 ชั้นต้นไม้ใหญ่ · เดาแบบมีเหตุผล</h3>
+        <p class="tip">กลับไปที่โจทย์ต้นกล้าพริก <b>3 × ▢ + 10 = 100</b> · ลองเลื่อนเลือกราคาที่เดา แล้วดูว่า "ถ้าถาดละเท่านี้ แล้วจะได้เท่าไร"</p>
+        <div class="row"><input type="range" id="gs" min="5" max="50" step="5" value="20" oninput="drawGuess()"></div>
+        <div class="lines" id="gsOut"></div>
+        <div class="tw"><table class="t" id="gsTab"><tr><th>เดาว่าถาดละ</th><th>3 × ▢ + 10</th><th>เทียบกับ 100</th></tr></table></div>
+        <div class="memo">🧠 <b>นี่คือเหตุผลแบบ "ถ้า… แล้ว…"</b> · ถ้าเดา 20 แล้วได้ 70 ซึ่งน้อยไป → ราคาจริงต้อง<b>มากกว่า</b> 20 · ข้อสรุปแต่ละข้อมาจากข้อก่อนหน้าเสมอ</div>
+        <div class="memo ex">⚠️ <b>เดาได้ แต่เหนื่อยเมื่อเลขใหญ่</b> · ถ้าโจทย์เป็น "ซื้อ 37 ถาด ให้แบงก์ 2,000 ทอน 150 บาท" ต้องเดาหลายรอบ · บทถัดไปเราจะได้<b>วิธีที่ไม่ต้องเดาเลย</b> ด้วยของธรรมดาอย่าง <b>ตาชั่ง</b> ⚖️</div>
+        <div class="center" style="margin-top:16px"><button class="btn go" onclick="openGame('c0')">🎮 ไปพิชิตด่านเลย!</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= CH 1 · ตาชั่ง ================= -->
+  <div class="screen" id="bal">
+    <button class="backbtn" onclick="home()">⬅️ กลับหน้าหลัก</button>
+    <div class="panel">
+      <h2>⚖️ ตาชั่ง</h2>
+
+      <div class="layer L1">
+        <h3>🌱 ชั้นเมล็ด · รู้แค่นี้ก็เข้าใจ</h3>
+        <p>ตาชั่งสองแขนแบบที่แม่ค้าใช้ชั่งของ · <b>ข้างไหนหนักกว่า ข้างนั้นจะลง</b> · ถ้าหนักเท่ากัน คานจะ<b>ตรง</b></p>
+
+        <div class="step-h" id="bal-s1"><span class="sn">1</span> 👆 ลองเล่นตาชั่ง</div>
+        <p class="tip">กดเพิ่ม/เอาออก แล้วดูคาน · ลองหาวิธีที่ <b>ทำให้คานตรงอยู่ตลอด</b> 🤔</p>
+        <div class="fig"><svg class="bsvg" id="bs1" viewBox="0 0 360 230"></svg></div>
+        <div class="eqline" id="bs1eq"></div>
+        <div class="ops">
+          <button class="tab" onclick="sb(1,0)">➕ ซ้าย</button><button class="tab" onclick="sb(-1,0)">➖ ซ้าย</button>
+          <button class="tab" onclick="sb(0,1)">➕ ขวา</button><button class="tab" onclick="sb(0,-1)">➖ ขวา</button>
+          <button class="tab on" onclick="sb(1,1)">➕ ทั้งสองข้าง</button><button class="tab on" onclick="sb(-1,-1)">➖ ทั้งสองข้าง</button>
+        </div>
+        <div class="info" id="bs1fb">เริ่มที่ซ้าย 4 ลูก ขวา 4 ลูก · คานตรง</div>
+
+        <div class="step-h" id="bal-s2"><span class="sn">2</span> 🛍️ ถุงปริศนา</div>
+        <p class="tip">ข้างซ้ายมี <b>ถุงปิด 1 ใบ</b> (ไม่รู้ว่าหนักเท่าไร) กับลูกตุ้ม 3 ลูก · ข้างขวามีลูกตุ้ม 8 ลูก · คานตรง<br>ในสมการ เราเขียน<b>ถุงปิดเป็นกล่อง ▢</b> (ของที่ยังไม่รู้)<br>👉 ทำให้<b>ถุงเหลืออยู่ข้างเดียวโดด ๆ</b> แล้วจะรู้ว่าถุงหนักเท่าไร · ทุกครั้งที่กด จะเขียนเป็นบรรทัดพร้อมเหตุผล</p>
+        <div class="pz" id="pz1"></div>
+
+        <div class="step-h" id="bal-s3"><span class="sn">3</span> 🔑 กฎข้อเดียวที่ต้องจำ</div>
+        <div class="memo">⚖️ <b>ทำอะไรกับข้างหนึ่ง ต้องทำแบบเดียวกันกับอีกข้าง</b> · คานจึงตรงอยู่ตลอด<br>เครื่องหมาย <b>=</b> ในสมการ ก็คือ <b>คานที่ตรง</b> นั่นเอง</div>
+        <div class="hist">📜 <b>ที่มา</b> · เมื่อราว 1,200 ปีก่อน นักคณิตศาสตร์ชื่อ <b>อัล-ควาริซมี</b> ในเมืองแบกแดด เขียนตำราแก้โจทย์แบบนี้ · ชื่อตำรามีสองคำ: <b>"อัล-ญับร์"</b> (al-jabr) แปลว่า <b>การเติมให้กลับมาครบ</b> กับ <b>"อัล-มุกอบะละฮ์"</b> แปลว่า <b>การทำให้สมดุล</b> (คือการเอาของที่เหมือนกันออกทั้งสองข้าง แบบที่เราเพิ่งทำ) · คำแรกกลายเป็นคำว่า <b>algebra</b> = พีชคณิต ที่เรียนกันทุกวันนี้</div>
+        <button class="more" onclick="openLayer('balL2',this)">🌿 อยากรู้อีกนิด · ถุงหลายใบ ต้องแบ่ง ⬇️</button>
+      </div>
+
+      <div class="layer L2 hide" id="balL2">
+        <h3>🌿 ชั้นต้นกล้า · ถุงหลายใบ</h3>
+        <p class="tip">ถุงทุกใบหนักเท่ากัน · เอาลูกตุ้มที่ติดถุงออกก่อน แล้ว<b>แบ่งทั้งสองข้างเป็นกองเท่า ๆ กัน</b> (แบ่ง 2 กอง เก็บไว้กองเดียว = หาร 2)</p>
+        <div class="memo">✍️ <b>เขียนสั้น</b>: ถุง 2 ใบ เขียนว่า <b>2▢</b> (อ่านว่า "สองกล่อง") แปลว่า 2 × ▢</div>
+        <div class="tabs">
+          <button class="tab on" onclick="pzTab('pz2',1,this)">🛍️🛍️ 2 ถุง</button>
+          <button class="tab" onclick="pzTab('pz2',2,this)">🛍️🛍️🛍️ 3 ถุง</button>
+        </div>
+        <div class="pz" id="pz2"></div>
+        <div class="memo">✂️ <b>แบ่งก็ใช้กฎเดิม</b> · ครึ่งหนึ่งของสองข้างที่หนักเท่ากัน ก็ยังหนักเท่ากัน · แบ่งข้างเดียว คานเอียงทันที</div>
+        <button class="more" onclick="openLayer('balL3',this)">🌳 เจาะลึก · ถุงอยู่ทั้งสองข้าง · = แปลว่าอะไรจริง ๆ ⬇️</button>
+      </div>
+
+      <div class="layer L3 hide" id="balL3">
+        <h3>🌳 ชั้นต้นไม้ใหญ่ · ถุงอยู่ทั้งสองข้าง</h3>
+        <p class="tip">ถุงอยู่ทั้งซ้ายและขวา · ไม่ต้องกลัว · <b>เอาถุงออกทั้งสองข้างได้เหมือนลูกตุ้ม</b> เพราะถุงทุกใบหนักเท่ากัน</p>
+        <div class="pz" id="pz3"></div>
+        <div class="step-h" id="bal-eq"><span class="sn">=</span> เครื่องหมาย = ไม่ได้แปลว่า "คำตอบคือ"</div>
+        <div class="cmp">
+          <div class="it"><div class="e">❌</div><b>เขียนต่อกันยาว</b><span>3 + 4 = 7 + 2 = 9<br>อ่านตามตาชั่ง: 3 + 4 หนักเท่ากับ 9 ? <b>ไม่จริง</b> (7 ไม่เท่า 9)</span></div>
+          <div class="it"><div class="e">✅</div><b>แยกบรรทัด</b><span>3 + 4 = 7<br>7 + 2 = 9<br>ทุกบรรทัดคานตรงจริง</span></div>
+        </div>
+        <div class="memo">🔎 <b>ตรวจคำตอบทุกครั้ง</b> · เอาค่าที่ได้ใส่แทน ▢ ในโจทย์เดิม แล้วดูว่าสองข้างเท่ากันจริงไหม · ถ้าไม่เท่า แปลว่ามีบรรทัดไหนทำข้างเดียว</div>
+        <div class="center" style="margin-top:16px"><button class="btn go" onclick="openGame('bal')">🎮 ไปพิชิตด่านเลย!</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= GAME ================= -->
+  <div class="screen" id="game">
+    <button class="backbtn" onclick="home()">⬅️ กลับหน้าหลัก</button>
+    <div class="panel" id="game-menu">
+      <h2 id="gTitle">🎮 เกมพิชิตด่าน</h2>
+      <div class="tabs" id="gTabs"></div>
+      <p class="lead">ด่านละ 5 ข้อ สุ่มใหม่ทุกครั้ง · มีหัวใจ ❤️ 3 ดวง · ตอบถูก 4 ข้อขึ้นไป = ผ่าน ปลดล็อกด่านถัดไป 🔓</p>
+      <div class="levels" id="levels"></div>
+      <p class="hint" style="margin-top:12px">ข้อที่ตอบผิด จะวนกลับมาถามอีกในรอบหน้า 🔁</p>
+    </div>
+
+    <div class="panel" id="game-play" style="display:none">
+      <div class="qhead"><span id="q-count">ข้อ 1 / 5</span><span class="hearts" id="q-hearts">❤️❤️❤️</span><span>ถูก: <span id="q-score">0</span></span></div>
+      <div class="qprog"><i id="q-prog" style="width:0%"></i></div>
+      <div class="qpic" id="q-pic"></div>
+      <div class="question" id="q-text">...</div>
+      <div class="choices txt" id="q-choices"></div>
+      <div class="feedback" id="q-fb"></div>
+      <div class="why" id="q-why"></div>
+      <div class="center"><button class="btn go nextbtn" id="q-next" onclick="nextQ()">ข้อต่อไป ➡️</button></div>
+    </div>
+
+    <div class="panel" id="game-end" style="display:none">
+      <div class="scorebig">
+        <div class="stars" id="e-stars">⭐⭐⭐</div>
+        <div class="msg" id="e-msg">เก่งมาก!</div>
+        <div class="detail" id="e-detail">ทำถูก 5 จาก 5 ข้อ</div>
+        <div class="center" id="e-btns" style="margin-top:18px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap"></div>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn fire" id="ch-retry" onclick="retryChallenge()">🔥 ท้าทายใหม่</button>
+
+  <footer>
+    ⚖️ สื่อการเรียนรู้ "สมการง่ายนิดเดียว" · เปิดได้ทุกอุปกรณ์<br>
+    เปิดแล้ว 2 บท · เรื่องร้อยละ ไปเรียนต่อที่ <a href="https://suchart-onlaiad-mac.github.io/percent/" target="_blank" rel="noopener">สนุกกับเปอร์เซ็นต์</a> · ความคืบหน้าบันทึกไว้ในเครื่องที่เล่น 💛
+  </footer>
+</div>
+
+<script>
+/* ============ helpers ============ */
+const $ = id => document.getElementById(id);
+const SAVE_KEY='eq-v1';
+let save={stars:{}, wrong:[]};
+try{ const s=JSON.parse(localStorage.getItem(SAVE_KEY)); if(s&&s.stars) save=s; }catch(e){}
+function persist(){ try{ localStorage.setItem(SAVE_KEY,JSON.stringify(save)); }catch(e){} }
+function totalStars(){ return Object.values(save.stars).reduce((a,b)=>a+b,0); }
+function showStars(){ $('totalStars').textContent=totalStars(); }
+showStars();
+
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  $(id).classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+  const r=$('ch-retry'); if(r) r.style.display=(town&&CHS[town.ch].scr===id)?'block':'none';
+  if(!keepLayers) collapseLayers(id); keepLayers=false; // กลับเข้าบทเมื่อไหร่ เริ่มที่ 🌱 เสมอ
+  refreshLayerPlay(id);
+}
+function home(){ go('home'); }
+
+/* ============ ชั้น 🌿🌳: กดเปิด/ซ่อน · ลองเล่นท้ายชั้น (ด่าน 1/2/3 = ชั้น 🌱🌿🌳) ============ */
+const LNM=['ชั้นเมล็ด','ชั้นต้นกล้า','ชั้นต้นไม้ใหญ่'], LIC=['🌱','🌿','🌳'];
+let keepLayers=false;
+const moreBtn = id => document.querySelector(`.more[onclick^="openLayer('${id}'"]`);
+function markMore(id,open){
+  const b=moreBtn(id); if(!b) return;
+  if(!b.dataset.t) b.dataset.t=b.innerHTML;
+  const n=+id.slice(-1)-1;
+  b.innerHTML=open?`⬆️ ซ่อน${LNM[n]} ${LIC[n]}`:b.dataset.t;
+}
+function openLayer(id){
+  const el=$(id);
+  if(!el.classList.contains('hide')) return closeLayer(id);
+  el.classList.remove('hide'); markMore(id,true);
+  setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),50);
+}
+function closeLayer(id){ // ซ่อน 🌿 = ซ่อน 🌳 ด้วย (ปุ่มเปิด 🌳 อยู่ใน 🌿)
+  const scr=id.slice(0,-2);
+  for(let k=+id.slice(-1);k<=3;k++){ const el=$(scr+'L'+k); if(el){ el.classList.add('hide'); markMore(scr+'L'+k,false); } }
+  const b=moreBtn(id); if(b) setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'center'}),50);
+}
+function collapseLayers(scr){
+  [2,3].forEach(k=>{ const el=$(scr+'L'+k); if(el){ el.classList.add('hide'); markMore(scr+'L'+k,false); } });
+}
+function readLayer(scr,i){ // จากหน้าผลเกม → กลับไปอ่านชั้น i (0=🌱) เปิดชั้นที่ต้องผ่านไว้ให้
+  keepLayers=true; go(scr); collapseLayers(scr);
+  for(let k=2;k<=i+1;k++){ $(scr+'L'+k).classList.remove('hide'); markMore(scr+'L'+k,true); }
+  if(i>0) setTimeout(()=>$(scr+'L'+(i+1)).scrollIntoView({behavior:'smooth',block:'start'}),400);
+}
+function layerPlay(ch,i){ openGame(ch); if(isOpen(i)) startGame(i); } // ยังล็อก → อยู่หน้าแผนที่ด่าน
+function refreshLayerPlay(scr){
+  document.querySelectorAll(`#${scr} .lp button`).forEach(b=>{
+    const i=+b.dataset.i, Ls=LEVELS.filter(L=>L.ch===b.dataset.ch), st=save.stars[Ls[i].id]||0,
+      open=i===0||(save.stars[Ls[i-1].id]||0)>0;
+    b.textContent=!open?`🔒 ${LNM[i]} ${LIC[i]} · เล่นผ่าน${LNM[i-1]}ก่อนนะ`
+      :st?`🎮 เล่นอีกรอบ · ${LNM[i]} ${LIC[i]} ${'⭐'.repeat(st)}`:`🎮 ลองเล่นดู ${LNM[i]} ${LIC[i]} เข้าใจแค่ไหน`;
+    b.style.opacity=open?'':'.6';
+  });
+}
+
+/* mascot reacts on click */
+const moods = ['⚖️','🧺','🌶️','🥬','🦉','🐼','🍋'];
+$('mascot').onclick = ()=>{ $('mascot').textContent = moods[Math.floor(Math.random()*moods.length)]; };
+
+/* ============ background bubbles ============ */
+(function(){
+  const colors=['#ff8fd4','#9b8bff','#5fb8ff','#42e0c8','#ffc04e','#76dd6e'];
+  const box=$('bubbles');
+  for(let i=0;i<14;i++){
+    const s=document.createElement('span');
+    const size=20+Math.random()*60;
+    s.style.width=s.style.height=size+'px';
+    s.style.left=Math.random()*100+'%';
+    s.style.background=colors[i%colors.length];
+    s.style.animationDuration=(10+Math.random()*16)+'s';
+    s.style.animationDelay=(-Math.random()*16)+'s';
+    box.appendChild(s);
+  }
+})();
+
+/* ============ คลังข้อ · c[0] = คำตอบถูก · s = ขั้นในบทที่ใช้ตอบข้อนี้ (ตอบผิด → ปุ่มย้อนไปขั้นนั้น) ============ */
+const BANK = {
+  c01:[
+    {p:'🌶️', s:'c0-s2', q:'ซื้อต้นกล้า 2 ถาด ราคาเท่ากัน ให้แบงก์ 100 ได้ทอน 20 บาท ถาดละกี่บาท', c:['40','50','60','80'], w:'จ่ายจริง 100 − 20 = 80 · แบ่ง 2 ถาด 80 ÷ 2 = 40'},
+    {p:'✏️', s:'c0-s3', q:'"ซื้อของ 3 ชิ้น ชิ้นละ ▢ บาท บวกค่าส่ง 10 บาท รวม 100 บาท" เขียนสั้นได้ว่าอะไร', c:['3 × ▢ + 10 = 100','3 + ▢ + 10 = 100','3 × 10 + ▢ = 100','▢ + 10 = 3 × 100'], w:'3 ชิ้น ชิ้นละ ▢ = 3 × ▢ · บวกค่าส่ง = + 10 · รวม = 100'},
+    {p:'🧺', s:'c0-s2', q:'ถาดละ 25 บาท ซื้อ 3 ถาด ให้แบงก์ 100 ได้เงินทอนเท่าไร', c:['25','75','30','15'], w:'3 × 25 = 75 · 100 − 75 = 25'},
+    {p:'📦', s:'c0-s3', q:'ใน 3 × ▢ + 10 = 100 กล่อง ▢ หมายถึงอะไร', c:['ราคาต่อถาดที่ยังไม่รู้','เงินทอน','จำนวนถาด','เงินที่ให้แม่ค้า'], w:'▢ = ของที่ยังไม่รู้และอยากหา · ในโจทย์นี้คือราคาต่อถาด'},
+    {p:'🤔', s:'c0-s1', q:'เดาว่าถาดละ 20 บาท → 3 × 20 + 10 = 70 ไม่ถึง 100 แปลว่าอะไร', c:['ราคาจริงต้องมากกว่า 20','ราคาจริงต้องน้อยกว่า 20','ราคาจริงคือ 20','โจทย์ผิด'], w:'ถ้าเดา 20 แล้วได้น้อยไป → ราคาจริงต้องมากกว่า 20'},
+    {p:'🔙', s:'c0-s2', q:'ตอนคิดย้อนโจทย์ต้นกล้าพริก ทำไมเอา 100 − 10 ก่อน', c:['เพราะ 10 บาทคือเงินทอน ไม่ได้จ่ายเป็นค่าต้นกล้า','เพราะลบง่ายกว่าหาร','เพราะ 10 บาทคือราคาถาด','ทำอะไรก่อนก็ได้ ผลเท่ากัน'], w:'ต้องเอาเงินทอนออกก่อน จะเหลือแต่ค่าต้นกล้า 3 ถาด แล้วค่อยแบ่ง 3'},
+    {p:'🍋', s:'c0-s2', q:'แม่ค้าขายมะนาว 4 กอง ราคากองละเท่ากัน ได้เงินรวม 80 บาท กองละกี่บาท', c:['20','40','16','84'], w:'80 บาทคือ 4 กองรวมกัน · 80 ÷ 4 = 20'},
+    {p:'🐷', s:'c0-s3', q:'"มีเงินเก็บ ▢ บาท แม่ให้เพิ่ม 50 บาท รวมเป็น 120 บาท" เขียนสั้นได้ว่าอะไร', c:['▢ + 50 = 120','▢ − 50 = 120','50 − ▢ = 120','▢ + 120 = 50'], w:'เงินเก็บ ▢ บวกที่แม่ให้ 50 = รวม 120'}
+  ],
+  c02:[
+    {p:'📱', s:'c0L2', q:'ค่าโทรรายเดือน 299 บาท บวกค่าโทรเกิน บิลมา 341 บาท ค่าโทรเกินกี่บาท', c:['42','52','640','32'], w:'ย้อน "บวก 299" ด้วยการลบ: 341 − 299 = 42'},
+    {p:'🏦', s:'c0L2', q:'มีเงินในบัญชี ▢ บาท ถอนออก 200 บาท เหลือ 500 บาท เขียนสั้นได้ว่าอะไร', c:['▢ − 200 = 500','▢ + 200 = 500','200 − ▢ = 500','▢ − 500 = 200'], w:'มี ▢ ถอนออก (ลบ) 200 เหลือ 500'},
+    {p:'🏦', s:'c0L2', q:'จาก ▢ − 200 = 500 เดิมมีเงินในบัญชีเท่าไร', c:['700','300','500','200'], w:'ย้อน "ลบ 200" ด้วยการบวก: 500 + 200 = 700'},
+    {p:'🥬', s:'c0L2', q:'ปลูกผัก ▢ แถว แถวละ 12 ต้น รวม 60 ต้น เขียนสั้นได้ว่าอะไร', c:['12 × ▢ = 60','12 + ▢ = 60','▢ − 12 = 60','60 × ▢ = 12'], w:'▢ แถว แถวละ 12 = 12 × ▢ · รวม = 60'},
+    {p:'🥬', s:'c0L2', q:'จาก 12 × ▢ = 60 ▢ เท่ากับเท่าไร', c:['5','48','72','6'], w:'ย้อน "คูณ 12" ด้วยการหาร: 60 ÷ 12 = 5'},
+    {p:'🔁', s:'c0L2', q:'คิดย้อนโจทย์ที่ "บวก 50" มา ต้องทำอะไร', c:['ลบ 50','บวก 50','คูณ 50','หาร 50'], w:'ย้อนของบวกคือลบ · ย้อนของคูณคือหาร'},
+    {p:'🔁', s:'c0L2', q:'คิดย้อนโจทย์ที่ "คูณ 4" มา ต้องทำอะไร', c:['หาร 4','ลบ 4','คูณ 4','บวก 4'], w:'ย้อนของคูณคือหาร'},
+    {p:'📶', s:'c0L2', q:'ซื้อแพ็กเน็ต 3 เดือน เดือนละเท่ากัน จ่ายรวม 450 บาท เดือนละกี่บาท', c:['150','447','1,350','135'], w:'450 บาทคือ 3 เดือนรวมกัน · 450 ÷ 3 = 150'}
+  ],
+  c03:[
+    {p:'🌶️', s:'c0L3', q:'3 × ▢ + 10 = 100 ลองใส่ ▢ = 35 ได้ 115 แปลว่าอะไร', c:['ราคาจริงน้อยกว่า 35','ราคาจริงมากกว่า 35','ถูกแล้ว ▢ = 35','ต้องบวกเพิ่มอีก 15'], w:'ได้ 115 มากกว่า 100 → เดามากไป ราคาจริงต้องน้อยกว่า 35'},
+    {p:'😓', s:'c0L3', q:'ทำไมการเดาถึงเหนื่อยเมื่อตัวเลขใหญ่', c:['ต้องลองหลายรอบกว่าจะตรง','เพราะเลขใหญ่ไม่มีคำตอบ','เพราะเครื่องคิดเลขใช้ไม่ได้','ไม่เหนื่อย เดาครั้งเดียวถูกเสมอ'], w:'ยิ่งเลขใหญ่ ทางเลือกยิ่งเยอะ ต้องลองหลายรอบ · บทตาชั่งมีวิธีที่ไม่ต้องเดา'},
+    {p:'🔎', s:'c0L3', q:'จะตรวจว่า ▢ = 30 เป็นคำตอบของ 3 × ▢ + 10 = 100 จริงไหม ทำอย่างไร', c:['ใส่ 30 แทน ▢ แล้วดูว่าได้ 100 จริงไหม','ดูว่า 30 ลงท้ายด้วย 0','เอา 100 หารด้วย 30','เอา 30 บวก 10'], w:'3 × 30 + 10 = 100 จริง → ถูก'},
+    {p:'📊', s:'c0L3', q:'3 × ▢ + 10 = 100 ลองใส่ 20 ได้ 70 · ใส่ 40 ได้ 130 คำตอบจริงอยู่ช่วงไหน', c:['ระหว่าง 20 กับ 40','น้อยกว่า 20','มากกว่า 40','เท่ากับ 70'], w:'20 ได้น้อยไป · 40 ได้มากไป → คำตอบอยู่ระหว่างกลาง'},
+    {p:'🧮', s:'c0L3', q:'2 × ▢ + 5 = 25 ลองใส่ ▢ = 10 ได้เท่าไร ตรงไหม', c:['ได้ 25 ตรงพอดี','ได้ 20 ไม่ตรง','ได้ 30 ไม่ตรง','ได้ 15 ไม่ตรง'], w:'2 × 10 = 20 · 20 + 5 = 25 ✅'},
+    {p:'⚖️', s:'c0-s3', q:'ข้อไหนเป็น "สมการ"', c:['5 + ▢ = 12','5 + 7','▢ + 3','12 บาท'], w:'สมการต้องมีเครื่องหมาย = บอกว่าสองข้างเท่ากัน'},
+    {p:'🧠', s:'c0L3', q:'"ถ้า ▢ = 4 แล้ว ▢ + 6 = 10" ประโยคนี้เป็นอย่างไร', c:['ถูก เพราะ 4 + 6 = 10','ผิด เพราะ 4 + 6 = 11','บอกไม่ได้ เพราะไม่รู้ ▢','ผิด เพราะ ▢ ต้องเป็น 10'], w:'ใส่ 4 แทน ▢ → 4 + 6 = 10 จริง'},
+    {p:'🎯', s:'c0L3', q:'5 × ▢ = 35 ลองใส่ 8 ได้ 40 (มากไป 5) ควรลองตัวไหนต่อ', c:['7','9','10','40'], w:'ได้ 40 มากไป 5 · ถ้า ▢ ลดลง 1 ผลจะลดลง 5 (เพราะ 5 × 1) → ลองใส่ 7 ได้ 35 พอดี'}
+  ],
+  bal1:[
+    {p:'⚖️', s:'bal-s1', q:'ตาชั่งคานตรงอยู่ ถ้าเพิ่มลูกตุ้ม 1 ลูกทั้งสองข้าง คานจะเป็นอย่างไร', c:['ยังตรงเหมือนเดิม','เอียงลงข้างซ้าย','เอียงลงข้างขวา','แกว่งไม่หยุด'], w:'ทำเหมือนกันทั้งสองข้าง คานยังตรง'},
+    {p:'⚖️', s:'bal-s1', q:'ตาชั่งคานตรงอยู่ ถ้าเอาลูกตุ้มออกจากข้างซ้ายข้างเดียว คานจะเป็นอย่างไร', c:['เอียงลงข้างขวา','เอียงลงข้างซ้าย','ยังตรงเหมือนเดิม','เอียงสลับไปมา'], w:'ข้างซ้ายเบาลง → ข้างขวาหนักกว่า จึงลง'},
+    {p:'🛍️', s:'bal-s2', q:'ข้างซ้ายมีถุง 1 ใบ + ลูกตุ้ม 3 ลูก ข้างขวามีลูกตุ้ม 8 ลูก คานตรง ถุงหนักกี่ลูก', c:['5','8','11','3'], w:'เอาลูกตุ้มออก 3 ลูกทั้งสองข้าง เหลือถุง = 5 ลูก'},
+    {p:'✏️', s:'bal-s2', q:'ถุง 1 ใบ + ลูกตุ้ม 3 ลูก หนักเท่ากับลูกตุ้ม 8 ลูก เขียนเป็นสมการได้ว่าอะไร', c:['▢ + 3 = 8','▢ = 3 + 8','▢ + 8 = 3','3 × ▢ = 8'], w:'ข้างซ้าย ▢ + 3 · ข้างขวา 8 · คานตรง = เท่ากัน'},
+    {p:'🛍️', s:'bal-s2', q:'จาก ▢ + 3 = 8 ถ้าเอาลูกตุ้มออก 3 ลูกทั้งสองข้าง จะเหลืออะไร', c:['▢ = 5','▢ = 8','▢ + 3 = 5','▢ = 11'], w:'ซ้ายเหลือ ▢ · ขวาเหลือ 8 − 3 = 5'},
+    {p:'🔑', s:'bal-s3', q:'กฎข้อเดียวของตาชั่ง คืออะไร', c:['ทำอะไรกับข้างหนึ่ง ต้องทำแบบเดียวกันกับอีกข้าง','ข้างซ้ายต้องหนักกว่าเสมอ','ห้ามแตะตาชั่ง','เอาของออกได้ทีละข้าง'], w:'ทำเหมือนกันทั้งสองข้าง คานจึงตรงอยู่ตลอด'},
+    {p:'🛍️', s:'bal-s2', q:'▢ + 6 = 10 ถุงหนักกี่ลูก', c:['4','16','6','10'], w:'เอาออก 6 ลูกทั้งสองข้าง: ▢ = 10 − 6 = 4'},
+    {p:'🟰', s:'bal-s3', q:'เครื่องหมาย = ในสมการ เทียบได้กับอะไรบนตาชั่ง', c:['คานที่อยู่ในแนวตรง','คานที่เอียง','ลูกตุ้ม','ถุงที่ยังไม่รู้น้ำหนัก'], w:'= แปลว่าสองข้างเท่ากัน เหมือนคานที่ตรง'}
+  ],
+  bal2:[
+    {p:'🛍️', s:'balL2', q:'ถุง 2 ใบ + ลูกตุ้ม 1 ลูก = ลูกตุ้ม 7 ลูก ทำอะไรก่อนจะง่ายที่สุด', c:['เอาลูกตุ้มออก 1 ลูกทั้งสองข้าง','แบ่ง 2 กองทันที','เอาถุงออก 1 ใบข้างเดียว','เพิ่มลูกตุ้มข้างซ้าย'], w:'เอาลูกตุ้มที่ติดถุงออกก่อน จะเหลือ 2▢ = 6 แบ่งง่าย (ถ้าแบ่งก่อนจะเจอลูกตุ้มครึ่งลูก)'},
+    {p:'✂️', s:'balL2', q:'2▢ = 6 แบ่ง 2 กองทั้งสองข้าง (÷ 2) ได้อะไร', c:['▢ = 3','▢ = 6','▢ = 12','2▢ = 3'], w:'ซ้าย 2▢ ÷ 2 = ▢ · ขวา 6 ÷ 2 = 3'},
+    {p:'🛍️', s:'balL2', q:'3▢ + 2 = 11 ▢ เท่ากับเท่าไร', c:['3','9','13','4'], w:'เอา 2 ออกทั้งสองข้าง: 3▢ = 9 · แบ่ง 3 กอง: ▢ = 3'},
+    {p:'✍️', s:'balL2', q:'"2▢" หมายความว่าอะไร', c:['ถุง 2 ใบ หนักเท่ากัน (2 × ▢)','ถุง 1 ใบ หนัก 2 ลูก','2 + ▢','ถุงใบที่ 2'], w:'2▢ = 2 × ▢ = ถุง 2 ใบที่หนักเท่ากัน'},
+    {p:'✂️', s:'balL2', q:'ทำไมต้องแบ่ง "ทั้งสองข้าง"', c:['ครึ่งของสองข้างที่เท่ากัน ก็ยังเท่ากัน','เพราะข้างขวาหนักกว่า','เพราะถุงมี 2 ใบ','แบ่งข้างเดียวก็ได้ผลเท่ากัน'], w:'แบ่งข้างเดียว ข้างนั้นเบาลง คานเอียงทันที'},
+    {p:'🛍️', s:'balL2', q:'4▢ = 20 ▢ เท่ากับเท่าไร', c:['5','16','24','80'], w:'แบ่ง 4 กองทั้งสองข้าง: 20 ÷ 4 = 5'},
+    {p:'🥭', s:'balL2', q:'ซื้อมะม่วง 3 กิโล ราคากิโลละเท่ากัน + ค่าถุง 5 บาท จ่ายรวม 95 บาท กิโลละกี่บาท', c:['30','90','100','33'], w:'3▢ + 5 = 95 · เอา 5 ออก: 3▢ = 90 · แบ่ง 3: ▢ = 30'},
+    {p:'📝', s:'balL2', q:'แก้ 2▢ + 4 = 10 บรรทัดถัดไปข้อไหนถูก พร้อมเหตุผล', c:['2▢ = 6 เพราะเอา 4 ออกทั้งสองข้าง','2▢ = 14 เพราะเอา 4 ออกทั้งสองข้าง','▢ + 4 = 5 เพราะแบ่ง 2 กองทั้งสองข้าง','2▢ = 10 เพราะ 4 หายไปเอง'], w:'10 − 4 = 6 · (ถ้าแบ่ง 2 กอง ต้องได้ ▢ + 2 = 5 เพราะ 4 ก็ต้องแบ่งด้วย)'}
+  ],
+  bal3:[
+    {p:'⚖️', s:'balL3', q:'3▢ + 1 = ▢ + 7 เอาถุงออก 1 ใบทั้งสองข้าง ได้อะไร', c:['2▢ + 1 = 7','3▢ + 1 = 7','2▢ + 1 = ▢ + 7','4▢ + 1 = 7'], w:'ซ้าย 3▢ เหลือ 2▢ · ขวา ▢ หายไป เหลือ 7'},
+    {p:'⚖️', s:'balL3', q:'3▢ + 1 = ▢ + 7 ▢ เท่ากับเท่าไร', c:['3','2','4','6'], w:'เอาถุงออก 1 ใบ: 2▢ + 1 = 7 → 2▢ = 6 → ▢ = 3'},
+    {p:'🔎', s:'balL3', q:'ตรวจคำตอบ ▢ = 3 ใน 3▢ + 1 = ▢ + 7 ได้ผลอย่างไร', c:['ซ้าย 10 ขวา 10 เท่ากัน ถูก','ซ้าย 10 ขวา 7 ผิด','ซ้าย 9 ขวา 10 ผิด','ตรวจไม่ได้ เพราะมี ▢ สองข้าง'], w:'ซ้าย 3 × 3 + 1 = 10 · ขวา 3 + 7 = 10'},
+    {p:'❌', s:'bal-eq', q:'เขียน 3 + 4 = 7 + 2 = 9 ถูกไหม', c:['ผิด เพราะ 3 + 4 ไม่เท่ากับ 9','ถูก เพราะคิดต่อกันได้','ถูก เพราะคำตอบสุดท้ายคือ 9','ผิด เพราะห้ามบวกสองครั้ง'], w:'= แปลว่าทุกข้างเท่ากัน · 3 + 4 = 7 แต่ 7 ไม่เท่ากับ 9 → ต้องแยกเป็น 2 บรรทัด'},
+    {p:'🟰', s:'bal-eq', q:'เครื่องหมาย = แปลว่าอะไร', c:['สองข้างเท่ากัน','คำตอบคือ','ทำต่อไป','มากกว่า'], w:'= ไม่ได้แปลว่า "คำตอบคือ" แต่บอกว่าสองข้างเท่ากัน เหมือนคานตรง'},
+    {p:'⚖️', s:'balL3', q:'2▢ + 5 = ▢ + 9 ▢ เท่ากับเท่าไร', c:['4','14','2','5'], w:'เอาถุงออก 1 ใบ: ▢ + 5 = 9 → ▢ = 4 · ตรวจ: 13 = 13'},
+    {p:'⚖️', s:'balL3', q:'สมการที่ถูกอยู่แล้ว ทำข้อไหนแล้วสองข้างยังเท่ากัน', c:['เอาถุงออก 1 ใบทั้งสองข้าง','บวก 3 เฉพาะข้างซ้าย','ลบ 1 เฉพาะข้างขวา','เอาถุงออกข้างเดียว'], w:'ทำเหมือนกันทั้งสองข้าง จึงยังเท่ากัน · ทำข้างเดียว คานเอียง'},
+    {p:'⚖️', s:'balL3', q:'5▢ = 2▢ + 12 ▢ เท่ากับเท่าไร', c:['4','12','6','3'], w:'เอาถุงออก 2 ใบทั้งสองข้าง: 3▢ = 12 → ▢ = 4 · ตรวจ: 20 = 20'}
+  ]
+};
+const LEVELS = [
+  {ch:'c0', id:'c01', icon:'🌱', name:'ด่าน 1 · เมล็ด', sub:'คิดย้อน · เขียนกล่อง ▢', cls:'c6'},
+  {ch:'c0', id:'c02', icon:'🌿', name:'ด่าน 2 · ต้นกล้า', sub:'บวก↔ลบ · คูณ↔หาร', cls:'c5'},
+  {ch:'c0', id:'c03', icon:'🌳', name:'ด่าน 3 · ต้นไม้ใหญ่', sub:'เดาแบบมีเหตุผล · ตรวจคำตอบ', cls:'c2'},
+  {ch:'bal', id:'bal1', icon:'🌱', name:'ด่าน 1 · เมล็ด', sub:'กฎตาชั่ง · ถุงปริศนา', cls:'c6'},
+  {ch:'bal', id:'bal2', icon:'🌿', name:'ด่าน 2 · ต้นกล้า', sub:'ถุงหลายใบ ต้องแบ่ง', cls:'c5'},
+  {ch:'bal', id:'bal3', icon:'🌳', name:'ด่าน 3 · ต้นไม้ใหญ่', sub:'ถุงสองข้าง · = แปลว่าอะไร', cls:'c2'}
+];
+const CHS = {
+  c0:{n:'ลองเดาก่อน', i:'🚪', scr:'c0'},
+  bal:{n:'ตาชั่ง', i:'⚖️', scr:'bal'}
+};
+
+
+/* ============ (EQ) ตัวช่วยเขียนบรรทัด: คณิต + เหตุผล ============ */
+const ln = (m,r,cls='') => `<div class="ln ${cls}"><span class="m">${m}</span>${r?`<span class="r">${r}</span>`:''}</div>`;
+
+/* ============ บท 0 · ลองเดาก่อน ============ */
+function guess0(){
+  const v=Number($('g0').value), fb=$('g0fb');
+  if(!$('g0').value||!(v>0)){ fb.innerHTML='👆 พิมพ์ตัวเลขที่เดาก่อน (เดาผิดได้ ไม่เป็นไร)'; return; }
+  const t=3*v+10;
+  if(v===30){ fb.innerHTML='✅ <b>ถูก! ถาดละ 30 บาท</b> · ตรวจ: 3 ถาด × 30 = 90 · บวกทอน 10 = <b>100</b> พอดี 🎉<br>ลองดูข้อ 2 ว่าคิดยังไงโดยไม่ต้องเดา 👇'; miniConfetti(); return; }
+  fb.innerHTML=`🤔 <b>ถ้า</b>ถาดละ ${v} บาท <b>แล้ว</b> 3 ถาด = ${3*v} บาท · บวกทอน 10 = <b>${t}</b> บาท<br>`
+    +(t<100?`แต่ให้ไป 100 → <b>${t} น้อยไป</b> แปลว่าราคาจริงต้อง<b>มากกว่า ${v}</b> · ลองใหม่`
+           :`แต่ให้ไป 100 → <b>${t} มากไป</b> แปลว่าราคาจริงต้อง<b>น้อยกว่า ${v}</b> · ลองใหม่`);
+}
+const BACK0=[
+  ['100 − 10 = 90','เพราะได้เงินทอน 10 บาท แปลว่าจ่ายค่าต้นกล้าจริงแค่ 90 บาท'],
+  ['90 ÷ 3 = 30','เพราะ 90 บาทคือ 3 ถาดรวมกัน ราคาเท่ากัน → แบ่ง 3 ส่วนเท่ากัน'],
+  ['ถาดละ 30 บาท ✅','ตรวจ: 3 × 30 + 10 = 100 จริง']
+];
+let back0I=0;
+function back0(){
+  if(back0I>=BACK0.length) return;
+  $('back0').insertAdjacentHTML('beforeend',ln(...BACK0[back0I],back0I===2?'ok':''));
+  back0I++;
+  if(back0I>=BACK0.length) $('back0b').style.display='none';
+}
+
+/* 🌿 ลองคิดย้อนเอง · ช่วยน้อยลงทีละข้อ: ข้อแรกบอกวิธีให้ · ข้อสองต้องเลือกวิธีเอง */
+const DRILL=[
+  {story:'📱 ค่าโทรศัพท์<b>รายเดือน 299 บาท</b> บวกค่าโทรเกินอีกจำนวนหนึ่ง<br>บิลเดือนนี้ <b>341 บาท</b>',ask:'ค่าโทรเกินกี่บาท?',eq:'299 + ▢ = 341',
+   steps:[{give:'ลบ 299', m:'341 − 299', a:42, r:'บิล 341 มีค่ารายเดือน 299 รวมอยู่ · โจทย์ "บวก" มา เราย้อนด้วย "ลบ"'}],
+   done:'▢ = 42 บาท', chk:'ตรวจ: 299 + 42 = 341 ✅'},
+  {story:'🥬 ปลูกผักกาด <b>▢ แถว แถวละ 8 ต้น</b> แล้วต้นกล้า<b>เหลือ 4 ต้น</b><br>ต้นกล้ามีทั้งหมด <b>60 ต้น</b>',ask:'ปลูกได้กี่แถว?',eq:'8 × ▢ + 4 = 60',
+   steps:[
+     {ops:['ลบ 4','หาร 8','บวก 4'], m:'60 − 4', a:56, r:'เอาต้นที่เหลือ 4 ต้นออกก่อน เหลือแต่ต้นที่ปลูกจริง',
+      no:{'หาร 8':'ถ้าหาร 8 ก่อน: 60 ÷ 8 ไม่ลงตัว เพราะใน 60 มีต้นที่เหลือ 4 ต้นปนอยู่ · ต้องเอาออกก่อน','บวก 4':'บวก 4 คือการเพิ่มต้นกล้า · แต่ 4 ต้นนั้นเหลือ ไม่ได้ปลูก ต้องเอาออก'}},
+     {ops:['หาร 8','คูณ 8','ลบ 8'], m:'56 ÷ 8', a:7, r:'56 ต้นนี้ปลูกแถวละ 8 → แบ่งเป็นกองละ 8 ต้น · โจทย์ "คูณ" มา ย้อนด้วย "หาร"',
+      no:{'คูณ 8':'คูณ 8 จะได้ต้นกล้ามากขึ้นไปอีก · โจทย์ "คูณ" มา ต้องย้อนด้วย "หาร"','ลบ 8':'ลบ 8 ได้แค่ 1 แถว · อยากรู้ว่ามีกี่แถว ต้องแบ่งทีละ 8 → หาร'}}
+   ], done:'▢ = 7 แถว', chk:'ตรวจ: 8 × 7 + 4 = 60 ✅'}
+];
+let dr={d:0,i:0,lines:''};
+function drill(d,btn){
+  if(btn){ btn.parentNode.querySelectorAll('.tab').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); }
+  const D=DRILL[d]; dr={d,i:0,lines:''};
+  $('drillStory').innerHTML=`<p>${D.story}</p><p class="ask">${D.ask}</p><div class="bigeq" style="font-size:24px;margin:4px 0">${D.eq}</div>`;
+  $('drillLines').innerHTML=''; drillStep();
+}
+function drillStep(){
+  const D=DRILL[dr.d], S=D.steps[dr.i];
+  if(!S){ $('drillIn').innerHTML=''; $('drillLines').insertAdjacentHTML('beforeend',ln(D.done,D.chk,'ok')); $('drillFb').innerHTML='🎉 เก่งมาก · ลองอีกข้อในแถบด้านบนได้'; miniConfetti(); return; }
+  if(S.give) return drillNum(S, `ผู้ช่วยบอกให้: <b>${S.give}</b> · คิดเลขต่อเองนะ`);
+  $('drillFb').innerHTML=`ขั้นที่ ${dr.i+1}: ต้องทำอะไรก่อน?`;
+  $('drillIn').innerHTML=S.ops.map((o,k)=>`<button class="tab" onclick="drillOp(${k})">${o}</button>`).join('');
+}
+function drillOp(k){
+  const S=DRILL[dr.d].steps[dr.i], o=S.ops[k];
+  if(k!==0){ $('drillFb').innerHTML='🤔 '+S.no[o]; return; }
+  drillNum(S,`✅ ใช่ <b>${o}</b> · คิดเลขต่อเลย`);
+}
+function drillNum(S,msg){
+  $('drillFb').innerHTML=msg;
+  $('drillIn').innerHTML=`<b style="font-size:20px">${S.m} =</b><input class="num" id="drN" type="number" inputmode="numeric" onkeydown="if(event.key==='Enter')drillChk()"><button class="btn go" onclick="drillChk()">ตอบ</button>`;
+  setTimeout(()=>{ const e=$('drN'); if(e) e.focus({preventScroll:true}); },50);
+}
+function drillChk(){
+  const S=DRILL[dr.d].steps[dr.i], v=Number($('drN').value);
+  if(v!==S.a){ $('drillFb').innerHTML=`🤔 ยังไม่ใช่ · ลองคิด <b>${S.m}</b> อีกครั้ง (ใช้เครื่องคิดเลขในมือถือได้)`; return; }
+  $('drillLines').insertAdjacentHTML('beforeend',ln(`${S.m} = ${S.a}`,S.r));
+  dr.i++; drillStep();
+}
+
+/* 🌳 เดาแบบมีเหตุผล: ถ้า… แล้ว… */
+let guessSeen={};
+function drawGuess(){
+  const v=+$('gs').value, t=3*v+10;
+  const cmp=t===100?'พอดี ✅':t<100?'น้อยไป → ราคาจริงมากกว่านี้':'มากไป → ราคาจริงน้อยกว่านี้';
+  $('gsOut').innerHTML=ln(`ถ้า ▢ = ${v} แล้ว 3 × ${v} + 10 = ${t}`,cmp,t===100?'ok':'');
+  guessSeen[v]=[t,cmp];
+  $('gsTab').innerHTML='<tr><th>เดาว่าถาดละ</th><th>3 × ▢ + 10</th><th>เทียบกับ 100</th></tr>'
+    +Object.keys(guessSeen).map(Number).sort((a,b)=>a-b).map(k=>`<tr${k===30?' style="background:#eafff0"':''}><td>${k} บาท</td><td>${guessSeen[k][0]}</td><td>${guessSeen[k][1]}</td></tr>`).join('');
+}
+
+/* ============ บท 1 · ตาชั่ง ============ */
+// ภาพตาชั่ง: จุดหมุน (180,62) · แขนยาวข้างละ 115 · จานแขวนต่ำลง 70 · ของในจาน: ถุงก่อน ลูกตุ้มตาม แถวละ 5
+const PIV=[180,62], ARM=115, HANG=70; // แขน 115: จานกว้าง ±62 ยังอยู่ในกรอบ 0–360
+function balInit(svg){
+  svg.innerHTML=`<ellipse cx="180" cy="214" rx="70" ry="9" fill="#d8d2f0"/>
+    <rect x="175" y="${PIV[1]}" width="10" height="150" rx="4" fill="#8f87c9"/>
+    <g class="beam" style="transform-origin:${PIV[0]}px ${PIV[1]}px"><rect x="${PIV[0]-ARM-6}" y="${PIV[1]-5}" width="${2*ARM+12}" height="10" rx="5" fill="#34306b"/></g>
+    <circle cx="${PIV[0]}" cy="${PIV[1]}" r="9" fill="#ffd34e" stroke="#34306b" stroke-width="3"/>
+    ${[-1,1].map(s=>`<g class="pan" data-s="${s}"><g transform="translate(${PIV[0]+s*ARM},${PIV[1]+HANG})">
+      <line x1="-52" y1="0" x2="0" y2="${-HANG}" stroke="#8f87c9" stroke-width="2"/><line x1="52" y1="0" x2="0" y2="${-HANG}" stroke="#8f87c9" stroke-width="2"/>
+      <g class="items"></g>
+      <path d="M-62,0 L62,0 L50,14 L-50,14 Z" fill="#a06bff"/>
+      <text class="cnt" x="0" y="38" text-anchor="middle" font-size="17" font-weight="700" fill="#34306b" font-family="Kanit,sans-serif"></text>
+    </g></g>`).join('')}`;
+}
+function sideItems(b,w,x,solved){
+  const out=[], all=[...Array(b).fill('b'),...Array(w).fill('w')];
+  all.forEach((t,i)=>{ const col=i%5, row=Math.floor(i/5), cx=-46+col*23, cy=-12-row*24;
+    out.push(t==='b'
+      ?`<g><rect x="${cx-10}" y="${cy-11}" width="21" height="23" rx="5" fill="${solved?'#39c14a':'#7a5cff'}"/><text x="${cx+0.5}" y="${cy+6}" text-anchor="middle" font-size="15" font-weight="800" fill="#fff" font-family="Kanit,sans-serif">${solved?x:'?'}</text></g>`
+      :`<circle cx="${cx}" cy="${cy+2}" r="9.5" fill="#ff9d42" stroke="#e07a1f" stroke-width="1.5"/>`); });
+  return out.join('');
+}
+const sideTxt=(b,w)=>{ const p=[]; if(b) p.push(b===1?'▢':b+'▢'); if(w||!b) p.push(w); return p.join(' + '); };
+function balDraw(svg,L,R,x,solved){
+  const wl=L.b*x+L.w, wr=R.b*x+R.w;
+  const a=Math.max(-15,Math.min(15,(wr-wl)*5)), rad=a*Math.PI/180;
+  svg.querySelector('.beam').style.transform=`rotate(${a}deg)`;
+  svg.querySelectorAll('.pan').forEach(g=>{ const s=+g.dataset.s, S=s<0?L:R;
+    g.style.transform=`translate(${-s*ARM*(1-Math.cos(rad))}px,${s*ARM*Math.sin(rad)}px)`;
+    g.querySelector('.items').innerHTML=sideItems(S.b,S.w,x,solved);
+    g.querySelector('.cnt').textContent=(S.b?`ถุง ${S.b}`:'')+(S.b&&S.w?' + ':'')+(S.w||!S.b?`${S.w} ลูก`:'');
+  });
+  return wl===wr;
+}
+
+/* 1) เล่นตาชั่ง: ลูกตุ้มล้วน */
+let sbS={l:4,r:4};
+function sb(dl,dr){
+  const nl=sbS.l+dl, nr=sbS.r+dr;
+  if(nl<0||nr<0){ $('bs1fb').innerHTML='🙂 ข้างนั้นไม่มีลูกตุ้มให้เอาออกแล้ว'; return; }
+  if(nl>10||nr>10){ $('bs1fb').innerHTML='🙂 จานเต็มแล้ว ลองเอาออกบ้าง'; return; }
+  sbS={l:nl,r:nr};
+  const eq=balDraw($('bs1'),{b:0,w:nl},{b:0,w:nr},0,false);
+  $('bs1eq').innerHTML=eq?`${nl} = ${nr}`:`<span style="color:#ff5f5f">${nl} ≠ ${nr}</span>`;
+  const both=dl&&dr;
+  $('bs1fb').innerHTML=eq
+    ?(both?'✅ <b>ทำเหมือนกันทั้งสองข้าง → คานยังตรง</b> · นี่คือเคล็ดลับ':'✅ คานตรง · สองข้างหนักเท่ากัน')
+    :`⚠️ คานเอียงลงข้าง<b>${nl>nr?'ซ้าย':'ขวา'}</b> เพราะหนักกว่า ${Math.abs(nl-nr)} ลูก`+(both?'':' · ทำข้างเดียว คานจึงเอียง');
+}
+
+/* 2) ถุงปริศนา: ทุกปุ่มเขียนเป็นบรรทัด + เหตุผล */
+const OPS={
+  w:['➖ ลูกตุ้ม 1 ลูก ทั้งสองข้าง','เอาลูกตุ้มออก 1 ลูก ทั้งสองข้าง → คานยังตรง'],
+  b:['➖ ถุง 1 ใบ ทั้งสองข้าง','เอาถุงออก 1 ใบ ทั้งสองข้าง → ยังตรง เพราะถุงทุกใบหนักเท่ากัน'],
+  d2:['➗ แบ่ง 2 กอง ทั้งสองข้าง','แบ่งทั้งสองข้างเป็น 2 กองเท่ากัน เก็บไว้กองเดียว (÷ 2) → ยังตรง'],
+  d3:['➗ แบ่ง 3 กอง ทั้งสองข้าง','แบ่งทั้งสองข้างเป็น 3 กองเท่ากัน เก็บไว้กองเดียว (÷ 3) → ยังตรง'],
+  wL:['➖ ลูกตุ้ม ข้างซ้ายข้างเดียว','เอาออกข้างซ้ายข้างเดียว']
+};
+const PZ={
+  pz1:{1:{L:{b:1,w:3},R:{b:0,w:8},x:5,ops:['w','wL']}},
+  pz2:{1:{L:{b:2,w:1},R:{b:0,w:7},x:3,ops:['w','d2','d3','wL']}, 2:{L:{b:3,w:2},R:{b:0,w:11},x:3,ops:['w','d2','d3','wL']}},
+  pz3:{1:{L:{b:3,w:1},R:{b:1,w:7},x:3,ops:['w','b','d2','d3','wL']}}
+};
+const PZS={};
+const cp=o=>JSON.parse(JSON.stringify(o));
+function pzTab(id,k,btn){
+  if(btn){ btn.parentNode.querySelectorAll('.tab').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); }
+  pzMount(id,k);
+}
+function pzMount(id,k=1){
+  const P=PZ[id][k];
+  PZS[id]={k,L:cp(P.L),R:cp(P.R),x:P.x,hist:[],tilt:false,done:false};
+  $(id).innerHTML=`<div class="fig"><svg class="bsvg" viewBox="0 0 360 230"></svg></div><div class="eqline"></div>
+    <div class="ops">${P.ops.map(o=>`<button class="tab${o==='wL'?'':' on'}" onclick="pzOp('${id}','${o}')">${OPS[o][0]}</button>`).join('')}
+      <button class="tab" onclick="pzUndo('${id}')">↩️ ย้อน 1 ขั้น</button><button class="tab" onclick="pzMount('${id}',${k})">↺ เริ่มใหม่</button></div>
+    <div class="lines"></div><div class="info"></div>`;
+  balInit($(id).querySelector('svg'));
+  $(id).querySelector('.lines').innerHTML=ln(`${sideTxt(P.L.b,P.L.w)} = ${sideTxt(P.R.b,P.R.w)}`,'เริ่ม: คานตรง');
+  pzShow(id,'👆 กดปุ่มด้านบน · ทุกครั้งที่กด จะได้บรรทัดใหม่พร้อมเหตุผล');
+}
+function pzShow(id,msg){
+  const S=PZS[id], box=$(id);
+  const solved=S.L.b===1&&S.L.w===0&&S.R.b===0;
+  const eq=balDraw(box.querySelector('svg'),S.L,S.R,S.x,solved&&!S.tilt);
+  box.querySelector('.eqline').innerHTML=eq?`${sideTxt(S.L.b,S.L.w)} = ${sideTxt(S.R.b,S.R.w)}`:`<span style="color:#ff5f5f">${sideTxt(S.L.b,S.L.w)} ≠ ${sideTxt(S.R.b,S.R.w)}</span>`;
+  if(msg) box.querySelector('.info').innerHTML=msg;
+  return solved&&eq;
+}
+function pzOp(id,o){
+  const S=PZS[id], box=$(id), {L,R}=S;
+  if(S.done) return pzShow(id,'🎉 หาคำตอบได้แล้ว · กด ↺ เริ่มใหม่ เพื่อเล่นอีกรอบ');
+  if(S.tilt) return pzShow(id,'⚠️ คานเอียงอยู่ · กด <b>↩️ ย้อน 1 ขั้น</b> ก่อน');
+  let why=null;
+  if(o==='w'&&!(L.w&&R.w)) why='ต้องมีลูกตุ้มทั้งสองข้าง ถึงจะเอาออก "ทั้งสองข้าง" ได้';
+  if(o==='wL'&&!L.w) why='ข้างซ้ายไม่มีลูกตุ้มแล้ว';
+  if(o==='b'&&!(L.b&&R.b)) why='ต้องมีถุงทั้งสองข้าง ถึงจะเอาออก "ทั้งสองข้าง" ได้';
+  if(o[0]==='d'){ const n=+o[1], V=[L.b,L.w,R.b,R.w], bi=V.findIndex(v=>v%n);
+    if(bi>=0){ const bag=bi%2===0;
+      why=`แบ่ง ${n} กองเท่ากันไม่ลงตัว (${bag?'ถุง':'ลูกตุ้ม'} ${V[bi]} ${bag?'ใบ':'ลูก'} แบ่ง ${n} ไม่ได้พอดี) · `
+        +(bag&&L.b&&R.b?'ลองเอาถุงออกทั้งสองข้างก่อน':bag?`ลองแบ่งจำนวนอื่นที่ลงตัวกับถุง ${V[bi]} ใบ`:'ลองเอาลูกตุ้มที่ติดถุงออกก่อน'); }
+    if(L.b+L.w+R.b+R.w===0) why='ไม่มีของให้แบ่งแล้ว'; }
+  if(why) return pzShow(id,'🤔 '+why);
+  S.hist.push(cp({L,R}));
+  if(o==='w'){ L.w--; R.w--; } else if(o==='wL'){ L.w--; } else if(o==='b'){ L.b--; R.b--; }
+  else { const n=+o[1]; [L,R].forEach(s=>{ s.b/=n; s.w/=n; }); }
+  const lines=box.querySelector('.lines'), eqTxt=`${sideTxt(L.b,L.w)} ${o==='wL'?'≠':'='} ${sideTxt(R.b,R.w)}`;
+  if(o==='wL'){
+    S.tilt=true;
+    lines.insertAdjacentHTML('beforeend',ln(eqTxt,'⚠️ '+OPS[o][1]+' → คานเอียง · ประโยคนี้ไม่จริงแล้ว','bad'));
+    return pzShow(id,'⚠️ <b>ทำข้างเดียว คานเอียงทันที</b> · สองข้างไม่เท่ากันแล้ว · กด ↩️ ย้อน 1 ขั้น');
+  }
+  lines.insertAdjacentHTML('beforeend',ln(eqTxt,OPS[o][1]));
+  if(pzShow(id,'✅ คานยังตรง · ทำต่อเลย')){
+    S.done=true; const P=PZ[id][S.k];
+    const chk=`${sideTxt(P.L.b,P.L.w)} = ${sideTxt(P.R.b,P.R.w)}`.replace(/(\d*)▢/g,(m,c)=>c?`${c} × ${S.x}`:`${S.x}`);
+    lines.insertAdjacentHTML('beforeend',ln(`ถุงหนัก ${S.x} ลูก 🎉`,`ตรวจ: ใส่ ${S.x} แทน ▢ ในโจทย์เดิม → ${chk} · สองข้างเท่ากันจริง ✅`,'ok'));
+    pzShow(id,`🎉 <b>▢ = ${S.x}</b> · ถุงเหลือข้างเดียวโดด ๆ แล้ว อีกข้างบอกน้ำหนักถุงพอดี`);
+    miniConfetti();
+  }
+}
+function pzUndo(id){
+  const S=PZS[id]; if(!S.hist.length) return pzShow(id,'🙂 ยังไม่ได้กดอะไร');
+  const h=S.hist.pop(); S.L=h.L; S.R=h.R; S.tilt=false; S.done=false;
+  const lines=$(id).querySelector('.lines'); lines.lastElementChild.remove();
+  if(lines.lastElementChild&&lines.lastElementChild.classList.contains('ok')) lines.lastElementChild.remove();
+  pzShow(id,'↩️ ย้อนกลับแล้ว');
+}
+// ตั้งค่าภาพตอนโหลด
+balInit($('bs1')); sb(0,0);
+pzMount('pz1'); pzMount('pz2'); pzMount('pz3');
+drill(0); drawGuess();
+
+/* ============ ตอบผิด → บอกว่าติดขั้นไหน + ปุ่มย้อนไปขั้นนั้น ============ */
+// [ชั้น 0/1/2, ชื่อขั้น] · คีย์ = id ของขั้นในหน้าบท
+const STEPS={
+  'c0-s1':[0,'ลองเดา: ถ้า… แล้ว…'], 'c0-s2':[0,'คิดย้อนทีละขั้น'], 'c0-s3':[0,'เขียนสั้นด้วยกล่อง ▢'],
+  'c0L2':[1,'คิดย้อน: บวก↔ลบ · คูณ↔หาร'], 'c0L3':[2,'เดาแบบมีเหตุผล'],
+  'bal-s1':[0,'ลองเล่นตาชั่ง'], 'bal-s2':[0,'ถุงปริศนา'], 'bal-s3':[0,'กฎข้อเดียวของตาชั่ง'],
+  'balL2':[1,'ถุงหลายใบ ต้องแบ่ง'], 'balL3':[2,'ถุงอยู่ทั้งสองข้าง'], 'bal-eq':[2,'= ไม่ได้แปลว่า "คำตอบคือ"']
+};
+function goStep(s){
+  const [lay]=STEPS[s], scr=CHS[curCh].scr;
+  readLayer(scr,lay);
+  setTimeout(()=>{ const el=$(s); if(el){ el.scrollIntoView({behavior:'smooth',block:'start'}); el.classList.add('flash'); setTimeout(()=>el.classList.remove('flash'),1800); } },500);
+}
+
+let curCh='c0';
+// ท้ายทุกชั้น: ปุ่มลองเล่นด่านของชั้นนั้น · ท้าย 🌿🌳: ปุ่มซ่อนชั้น · ปุ่ม 🎮 เดิมท้ายบท = แผนที่ด่านรวม
+Object.entries(CHS).forEach(([ch,C])=>{
+  const L3=$(C.scr+'L3'); if(!L3) return;
+  const play=i=>`<div class="center lp" style="margin-top:14px"><button class="btn go" data-ch="${ch}" data-i="${i}" onclick="layerPlay('${ch}',${i})"></button></div>`;
+  const hideB=k=>`<button class="more" onclick="closeLayer('${C.scr}L${k}')">⬆️ ซ่อน${LNM[k-1]} ${LIC[k-1]}</button>`;
+  moreBtn(C.scr+'L2').insertAdjacentHTML('beforebegin',play(0));
+  moreBtn(C.scr+'L3').insertAdjacentHTML('beforebegin',play(1)+hideB(2));
+  const menu=L3.querySelector('[onclick^="openGame"]');
+  menu.closest('.center').insertAdjacentHTML('beforebegin',play(2));
+  menu.className='btn alt'; menu.textContent='🗺️ ดูด่านทั้งหมดของบทนี้';
+  L3.insertAdjacentHTML('beforeend',hideB(3));
+});
+function nextCh(ch){ // บทถัดไปตามลำดับหน้าแรก (เรียนเป็นโซ่ ห้ามข้ามขั้น)
+  const K=Object.keys(CHS), i=K.indexOf(ch);
+  return K[i+1]?{scr:CHS[K[i+1]].scr, lab:'ไปบทถัดไป · '+CHS[K[i+1]].i+' '+CHS[K[i+1]].n.replace('🏆 ','')}:null;
+}
+const chLevels = () => LEVELS.filter(L=>L.ch===curCh);
+function openGame(ch){ if(ch) curCh=ch; go('game'); backToGameMenu(); }
+const PER_ROUND=5, PASS=4;
+
+/* ============ level map ============ */
+function isOpen(i){ return i===0 || (save.stars[chLevels()[i-1].id]||0)>0; }
+function renderLevels(){
+  $('gTitle').textContent='🎮 เกมพิชิตด่าน · '+CHS[curCh].n;
+  $('gTabs').innerHTML=Object.entries(CHS).map(([k,C])=>`<button class="tab${k===curCh?' on':''}" onclick="curCh='${k}';renderLevels()">${C.i} ${C.n}</button>`).join('');
+  const box=$('levels'); box.innerHTML='';
+  chLevels().forEach((L,i)=>{
+    const b=document.createElement('button');
+    const open=isOpen(i), st=save.stars[L.id]||0;
+    b.className='lv '+L.cls+(open?'':' locked');
+    b.innerHTML=`<span class="n">${open?L.icon:'🔒'}</span><span><b>${L.name}</b><small>${open?L.sub:'ผ่านด่านก่อนหน้าเพื่อปลดล็อก'}</small></span>
+      <span class="st">${'⭐'.repeat(st)}${'☆'.repeat(3-st)}${(save.boss||{})[L.id]?'<span class="bd" title="พิชิตข้อปราบเซียนครบ">🏆</span>':''}</span>`;
+    if(open) b.onclick=()=>startGame(i);
+    box.appendChild(b);
+  });
+}
+
+/* ============ Quiz Game ============ */
+let game={qs:[],idx:0,score:0,hearts:3,lv:0,mode:'round'};
+// มติเกม 03-11: ผ่านด่าน → 🔥 ท้าทายต่อ (ข้อที่เหลือในคลัง + 👹 ข้อปราบเซียน) หัวใจ 3 ดวงใหม่ · ดาวคิดจาก 5 ข้อแรกเท่านั้น
+const BOSS={};            // ข้อปราบเซียนรายด่าน {id:[...]} — บท 0–1 ยังไม่มี
+let restOf={};            // ข้อที่ยังไม่ได้ถามในรอบล่าสุดของแต่ละด่าน
+let town=null;            // {ch, lv} หัวใจหมดแล้วกลับไปอ่านบท
+
+function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function qKey(lvId,q){ return lvId+'|'+q.q; }
+const prep = q => ({...q, choices:q.c?shuffle(q.c):[], ans:q.c?q.c[0]:q.k});
+const isLast = () => game.hearts<=0 || game.idx>=game.qs.length-1;
+const heartsTxt = () => '❤️'.repeat(game.hearts)+'🤍'.repeat(3-game.hearts);
+
+function startGame(lv){
+  const L=chLevels()[lv], pool=BANK[L.id];
+  // ข้อที่เคยตอบผิด ได้สิทธิ์ขึ้นก่อน แล้วเติมด้วยข้อสุ่ม
+  const wrong=shuffle(pool.filter(q=>save.wrong.includes(qKey(L.id,q))));
+  const rest=shuffle(pool.filter(q=>!wrong.includes(q)));
+  const picked=[...wrong.slice(0,2), ...rest].slice(0,PER_ROUND);
+  restOf[L.id]=pool.filter(q=>!picked.includes(q));
+  game={lv, mode:'round', qs:shuffle(picked).map(prep), idx:0, score:0, hearts:3};
+  showPlay();
+}
+const OTHER_N=3; // ท้าทายต่อ: ดึงข้อจากชั้นอื่นของบทเดียวกัน ชั้นละไม่เกิน 3 ข้อ
+function challengePool(lv){ // ข้อที่เหลือของด่านนี้ → ข้อชั้นอื่น (layer/src บอกที่มา) → 👹 ท้ายสุด
+  const Ls=chLevels(), L=Ls[lv];
+  const rest=restOf[L.id]||BANK[L.id];   // reload แล้วไม่รู้ว่ารอบก่อนถามข้อไหน → ใช้ทั้งคลัง
+  const other=Ls.flatMap((O,i)=>i===lv?[]:shuffle(BANK[O.id]).slice(0,OTHER_N).map(q=>({...q, layer:i, src:O.id})));
+  const boss=(BOSS[L.id]||[]).map(q=>({...q, boss:true}));
+  return [...shuffle(rest), ...shuffle(other), ...shuffle(boss)];
+}
+function startChallenge(lv){
+  game={lv, mode:'challenge', qs:challengePool(lv).map(prep), idx:0, score:0, hearts:3};
+  town=null; $('ch-retry').style.display='none';
+  showPlay();
+}
+function goTown(){ // 🏘️ กลับเมืองเตรียมเสบียง
+  town={ch:curCh, lv:game.lv};
+  go(CHS[curCh].scr);
+}
+function retryChallenge(){ // 🔥 ท้าทายใหม่ หลังอ่านบท
+  if(!town) return;
+  const t=town; curCh=t.ch; go('game'); startChallenge(t.lv);
+}
+function showPlay(){
+  $('game-menu').style.display='none';
+  $('game-end').style.display='none';
+  $('game-play').style.display='block';
+  showQ();
+}
+function showQ(){
+  const q=game.qs[game.idx], N=game.qs.length;
+  $('q-count').textContent=game.mode==='round'?`ข้อ ${game.idx+1} / ${N}`:(q.boss?'👹 ปราบเซียน':'🔥 ท้าทาย'+(q.layer!=null?` · ข้อจาก${LNM[q.layer]} ${LIC[q.layer]}`:''))+` ${game.idx+1} / ${N}`;
+  $('q-score').textContent=game.score;
+  $('q-hearts').textContent=heartsTxt();
+  $('q-prog').style.width=(game.idx/N*100)+'%';
+  $('q-pic').textContent=q.p||'';
+  $('q-text').textContent=q.q;
+  $('q-fb').textContent=''; $('q-why').style.display='none'; $('q-next').style.display='none';
+  const box=$('q-choices'); box.innerHTML='';
+  $('q-pic').onclick=null;
+  q.choices.forEach((val,i)=>{
+    const b=document.createElement('button');
+    b.className='choice'; b.textContent=['ก','ข','ค','ง'][i]+'. '+val;
+    b.onclick=()=>answer(b,val,q);
+    box.appendChild(b);
+  });
+}
+function afterAnswer(q,ok){
+  persist();
+  // ตอบผิด → บอกว่าติดขั้นไหนในบท + ปุ่มพากลับไปขั้นนั้น (กลไกสำหรับคนเรียนรู้ช้า)
+  const st=!ok&&q.s&&STEPS[q.s];
+  $('q-why').innerHTML='💡 '+q.w+(st?`<div class="stuck">📍 ข้อนี้ใช้ขั้น <b>${st[1]}</b> (${LNM[st[0]]} ${LIC[st[0]]})<br><button class="tab on" style="margin-top:6px" onclick="goStep('${q.s}')">↩️ กลับไปดูขั้นนี้</button></div>`:'');
+  $('q-why').style.display='block';
+  $('q-next').textContent=isLast()?'ดูผล 🏁':'ข้อต่อไป ➡️';
+  $('q-next').style.display='inline-block';
+}
+function answer(btn,val,q){
+  const btns=[...document.querySelectorAll('#q-choices .choice')];
+  btns.forEach(b=>b.disabled=true);
+  const key=qKey(q.src||chLevels()[game.lv].id,q);
+  if(val===q.ans){
+    btn.classList.add('correct');
+    game.score++; $('q-score').textContent=game.score;
+    $('q-fb').textContent='✅ ถูกต้อง เก่งมาก!'; $('q-fb').style.color='#39c14a';
+    save.wrong=save.wrong.filter(k=>k!==key);
+    miniConfetti();
+  } else {
+    btn.classList.add('wrong');
+    game.hearts--; $('q-hearts').textContent=heartsTxt();
+    $('q-fb').textContent='❌ ยังไม่ถูกนะ'; $('q-fb').style.color='#ff5f5f';
+    btns[q.choices.indexOf(q.ans)].classList.add('correct');
+    if(!q.boss && !save.wrong.includes(key)) save.wrong.push(key);
+  }
+  afterAnswer(q,val===q.ans);
+}
+function nextQ(){
+  game.idx++;
+  if(game.hearts<=0 || game.idx>=game.qs.length) endGame();
+  else showQ();
+}
+function endBtns(html){
+  $('e-btns').innerHTML=html+`<button class="btn go" onclick="backToGameMenu()">🗺️ แผนที่ด่าน</button>`;
+}
+function endGame(){
+  $('game-play').style.display='none';
+  $('game-end').style.display='block';
+  if(game.mode==='challenge') return endChallenge();
+  const s=game.score, L=chLevels()[game.lv];
+  const pass = s>=PASS && game.hearts>0;
+  const starN = !pass?0 : s>=5?3 : 2;
+  $('e-stars').textContent = '⭐'.repeat(starN)+'☆'.repeat(3-starN);
+  const next=chLevels()[game.lv+1];
+  $('e-msg').textContent = !pass?'เกือบแล้ว ลองใหม่นะ 💪' : starN===3?'สุดยอด! ไม่พลาดเลย 🏆':'ผ่านด่านแล้ว! 😄';
+  const lv=game.lv, scr=CHS[curCh].scr, nx=nextCh(curCh);
+  $('e-detail').textContent = `ทำถูก ${s} จาก ${PER_ROUND} ข้อ`+(pass&&next&&!(save.stars[L.id]>0)?` · ปลดล็อก ${next.name} 🔓`:'')+(!pass?` · ต้องถูก ${PASS} ข้อขึ้นไป · ลองอ่าน${LNM[lv]}อีกรอบ แล้วกลับมาเล่นใหม่`:'');
+  if(starN>(save.stars[L.id]||0)){ save.stars[L.id]=starN; persist(); showStars(); }
+  const left=challengePool(lv).length;
+  // ผ่าน → ชวนอ่านกว้างก่อน (บทถัดไป) หรือลงลึกชั้นถัดไป · ไม่ผ่าน → พากลับไปชั้นที่เพิ่งเล่น
+  endBtns(pass
+    ? (nx?`<button class="btn go" onclick="go('${nx.scr}')">▶ ${nx.lab}</button>`:'')
+      +(lv<2?`<button class="btn alt" onclick="readLayer('${scr}',${lv+1})">${LIC[lv+1]} อ่าน${LNM[lv+1]}ต่อ</button>`
+           :`<button class="btn alt" onclick="go('${scr}')">📖 ทบทวนบทเรียน</button>`)
+      +(left?`<button class="btn fire" onclick="startChallenge(${lv})">🔥 ท้าทายต่อ (อีก ${left} ข้อ)</button>`:'')
+    : `<button class="btn alt" onclick="readLayer('${scr}',${lv})">📖 กลับไปอ่าน${LNM[lv]} ${LIC[lv]}</button>`);
+  if(pass) bigConfetti();
+}
+function endChallenge(){
+  const L=chLevels()[game.lv], N=game.qs.length, alive=game.hearts>0;
+  const hasBoss=game.qs.some(q=>q.boss);
+  if(!alive){
+    $('e-stars').textContent='💔';
+    $('e-msg').textContent='หัวใจหมดแล้ว ไปเตรียมเสบียงก่อนนะ 🎒';
+    $('e-detail').textContent=`ตอบไป ${game.idx} จาก ${N} ข้อ (ถูก ${game.score}) · กลับไปอ่านบท แล้วกด 🔥 ท้าทายใหม่ ได้หัวใจ 3 ดวงเต็ม`;
+    endBtns(`<button class="btn alt" onclick="goTown()">🏘️ กลับเมืองเตรียมเสบียง</button>`);
+    return;
+  }
+  if(hasBoss){ save.boss=save.boss||{}; save.boss[L.id]=1; persist(); }
+  $('e-stars').textContent=hasBoss?'🏆':'🔥';
+  $('e-msg').textContent=hasBoss?'พิชิตข้อปราบเซียนครบ! ได้ตรา 🏆':'ฝ่าครบทุกข้อในคลังแล้ว! 🔥';
+  $('e-detail').textContent=`ตอบถูก ${game.score} จาก ${N} ข้อ · หัวใจเหลือ ${game.hearts}`;
+  endBtns(`<button class="btn alt" onclick="go(CHS[curCh].scr)">📖 ทบทวนบทเรียน</button>`);
+  bigConfetti();
+}
+function backToGameMenu(){
+  $('game-end').style.display='none';
+  $('game-play').style.display='none';
+  $('game-menu').style.display='block';
+  town=null; $('ch-retry').style.display='none';
+  renderLevels();
+}
+
+/* ============ confetti ============ */
+function spawnConfetti(count){
+  const colors=['#ff6ec7','#a06bff','#4ea8ff','#37e0d8','#5bd75b','#ffd34e','#ff9d42'];
+  for(let i=0;i<count;i++){
+    const c=document.createElement('div');
+    c.className='confetti';
+    c.style.left=Math.random()*100+'vw';
+    c.style.background=colors[Math.floor(Math.random()*colors.length)];
+    c.style.animation=`fall ${1.5+Math.random()*1.5}s ease-in forwards`;
+    c.style.animationDelay=(Math.random()*0.3)+'s';
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),3200);
+  }
+}
+function miniConfetti(){ spawnConfetti(14); }
+function bigConfetti(){ spawnConfetti(60); }
+
+/* ลิงก์ตรงเข้าบท: index.html#bal (ใช้ลิงก์ข้ามแอป เช่นจาก percent) */
+{ const h=decodeURIComponent(location.hash.slice(1)); if(h&&$(h)&&$(h).classList.contains('screen')) go(h); }
+</script>
+</html>
